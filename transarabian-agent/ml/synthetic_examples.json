@@ -1,0 +1,1472 @@
+[
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:43:43"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:01"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:45:49"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:50"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:50"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:50"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:50"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:45:50"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T01:47:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:14:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:14:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:14:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:14:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:14:22"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:14:26"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:14:26"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:14:26"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:14:26"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:14:26"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:17:38"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:17:38"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:17:38"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:17:38"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:17:38"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:17:42"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:17:42"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:17:42"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:17:42"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:17:42"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:24:16"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:24:16"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:24:16"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:24:16"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-09T02:24:16"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:24:19"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:24:19"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:24:19"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:24:19"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-09T02:24:19"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T01:08:15"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:16:56"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-11T23:48:10"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:08:08"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:40:06"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:40:06"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:40:06"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:40:06"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:40:06"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:40:07"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:40:07"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:40:07"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:40:07"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:40:07"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:43:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:43:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:43:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:43:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-12T00:43:49"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:43:50"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:43:50"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:43:50"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:43:50"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-12T00:43:50"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:36:48"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T07:41:14"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T08:37:02"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T22:52:49"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-16T23:29:13"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-19T22:31:22"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "අනේ interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "please interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "machan interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "සහෝදරයා interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "appointment_date",
+  "text": "ටිකක් interview eka kavadada",
+  "source": "synthetic",
+  "parent": "interview eka kavadada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "fee_price",
+  "text": "අනේ mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "fee_price",
+  "text": "please mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "fee_price",
+  "text": "machan mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "fee_price",
+  "text": "සහෝදරයා mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-20T00:35:45"
+ },
+ {
+  "intent": "fee_price",
+  "text": "ටිකක් mage visa fee eka kiyada",
+  "source": "synthetic",
+  "parent": "mage visa fee eka kiyada",
+  "added_at": "2026-10-20T00:35:45"
+ }
+]
