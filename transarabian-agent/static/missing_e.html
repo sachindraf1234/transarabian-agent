@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Missing E-numbers · Trans Arabian</title>
+<style>
+  :root{--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--ok:#059669;--warn:#b45309;--bad:#b91c1c;--bg:#f8fafc}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:28px 20px 60px}
+  header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:22px}
+  h1{margin:0 0 4px;font-size:22px}
+  .sub{color:var(--mut);font-size:14px}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid var(--warn);
+        padding:12px 14px;border-radius:6px;margin-bottom:22px;font-size:14px}
+  table{width:100%;border-collapse:collapse;background:#fff;
+        border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}
+  th{background:#f1f5f9;font-weight:600;font-size:12px;text-transform:uppercase;
+     letter-spacing:.04em;color:var(--mut)}
+  tr:last-child td{border-bottom:none}
+  input{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:5px;
+        font:14px ui-monospace,SFMono-Regular,Menlo,monospace}
+  input:focus{outline:2px solid #93c5fd;border-color:#3b82f6}
+  button{padding:7px 14px;border:1px solid var(--line);background:#fff;border-radius:5px;
+         cursor:pointer;font-size:13px;font-weight:500}
+  button:hover{background:#f1f5f9}
+  button.primary{background:var(--ok);border-color:var(--ok);color:#fff}
+  button.primary:hover{background:#047857}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .msg{margin-top:7px;font-size:13px;min-height:18px}
+  .msg.ok{color:var(--ok)} .msg.bad{color:var(--bad)}
+  .empty{background:#fff;border:1px solid var(--line);border-radius:8px;
+         padding:34px;text-align:center;color:var(--mut)}
+  .pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;
+        background:#f1f5f9;color:var(--mut);font-family:ui-monospace,monospace}
+  nav{margin-top:26px;font-size:14px}
+  nav a{color:#2563eb;text-decoration:none;margin-right:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Missing E-numbers</h1>
+    <div class="sub">Applicants imported without an E-number. They still match by name — fill these in to make matching exact.</div>
+  </header>
+
+  <div class="note">
+    These people came from the source list with no E-number, so the importer gave them a
+    placeholder key like <span class="pill">SE:SE2419533</span>. Enter the real E-number from
+    their file or passport. Every linked record (appointments, collections, emails) moves across
+    automatically.
+  </div>
+
+  <div id="box"><div class="empty">Loading…</div></div>
+
+  <nav>
+    <a href="/">Console</a><a href="/people">People</a><a href="/group">Group queue</a>
+  </nav>
+</div>
+
+<script>
+async function load(){
+  const r = await fetch('/api/missing-e');
+  const d = await r.json();
+  const box = document.getElementById('box');
+  if(!d.applicants || !d.applicants.length){
+    box.innerHTML = '<div class="empty">✅ Every applicant has a real E-number.</div>';
+    return;
+  }
+  let h = '<table><thead><tr><th>Name</th><th>SE number</th><th>WhatsApp</th>'
+        + '<th style="width:210px">Real E-number</th><th style="width:96px"></th></tr></thead><tbody>';
+  for(const a of d.applicants){
+    h += '<tr data-key="' + esc(a.e_number) + '">'
+      +  '<td>' + esc(a.name||'—') + '</td>'
+      +  '<td><span class="pill">' + esc(a.se_number||'') + '</span></td>'
+      +  '<td>' + esc(a.whatsapp||'—') + '</td>'
+      +  '<td><input placeholder="E2477850…" value=""></td>'
+      +  '<td><button class="primary" onclick="save(this)">Save</button></td></tr>'
+      +  '<tr><td colspan="5" class="msg" style="padding-top:0;border-bottom:1px solid var(--line)"></td></tr>';
+  }
+  box.innerHTML = h + '</tbody></table>';
+}
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+async function save(btn){
+  const tr = btn.closest('tr');
+  const key = tr.dataset.key;
+  const val = tr.querySelector('input').value.trim();
+  const msg = tr.nextElementSibling.querySelector('.msg') || tr.nextElementSibling;
+  if(!val){ msg.className='msg bad'; msg.textContent='Type an E-number first.'; return; }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  msg.className='msg'; msg.textContent='';
+  try{
+    const r = await fetch('/api/missing-e',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({current_key:key, e_number:val, by:'console'})});
+    const d = await r.json();
+    if(d.ok){
+      msg.className='msg ok';
+      msg.textContent = d.unchanged ? 'Already set to that.' : '✔ Saved — '+esc(d.e_number);
+      btn.textContent='Saved'; btn.classList.remove('primary');
+      setTimeout(load, 1200);
+    } else {
+      msg.className='msg bad'; msg.textContent='✖ '+(d.error||'Could not save.');
+      btn.disabled=false; btn.textContent='Save';
+    }
+  }catch(e){
+    msg.className='msg bad'; msg.textContent='✖ '+e;
+    btn.disabled=false; btn.textContent='Save';
+  }
+}
+load();
+</script>
+</body>
+</html>

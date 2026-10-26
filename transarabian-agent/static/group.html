@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Group posts - Trans Arabian</title>
+<script src="https://unpkg.com/tailwindcss@3?plugins=forms"></script>
+<style>
+  body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+</style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+<div class="max-w-4xl mx-auto p-5">
+
+  <div class="flex items-center justify-between mb-5">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Romania group posts</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        Copy each list and paste it into the Romania section WhatsApp group.
+      </p>
+    </div>
+    <a href="/" class="text-sm text-blue-600 hover:underline">&larr; Console</a>
+  </div>
+
+  <div id="banner" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+
+  <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-5 text-sm text-amber-900">
+    <strong>Why is this manual?</strong> Meta's official tools cannot post into this
+    group &mdash; the Cloud API only reaches individuals, and Meta's Groups API needs
+    a verified badge plus a maximum of 8 people. The remaining automated route
+    breaks WhatsApp's rules and risks a ban, so a human pastes instead.
+  </div>
+
+  <div id="list" class="space-y-4">
+    <p class="text-slate-500 text-sm">Loading&hellip;</p>
+  </div>
+
+</div>
+
+<script>
+const banner = document.getElementById('banner');
+const listEl = document.getElementById('list');
+
+function flash(msg, good=true){
+  banner.textContent = msg;
+  banner.className = 'mb-4 rounded-lg px-4 py-3 text-sm ' +
+    (good ? 'bg-green-50 border border-green-200 text-green-800'
+          : 'bg-red-50 border border-red-200 text-red-800');
+  banner.classList.remove('hidden');
+  setTimeout(()=>banner.classList.add('hidden'), 3500);
+}
+
+async function load(){
+  const r = await fetch('/api/group/pending?limit=50');
+  const d = await r.json();
+  const items = (d.items || []);
+  if(!items.length){
+    listEl.innerHTML =
+      '<div class="bg-white border border-slate-200 rounded-lg p-8 text-center text-slate-500">'+
+      'Nothing waiting. Group lists will appear here automatically when mail arrives.</div>';
+    return;
+  }
+  listEl.innerHTML = items.map(it => card(it)).join('');
+}
+
+function card(it){
+  const esc = s => (s||'').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  return `
+  <div class="bg-white border border-slate-200 rounded-lg shadow-sm" id="card-${it.id}">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+      <div>
+        <span class="font-semibold text-slate-800">${esc(it.title) || ('#'+it.id)}</span>
+        <span class="ml-2 text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600">${esc(it.kind)}</span>
+      </div>
+      <span class="text-xs text-slate-400">${esc((it.created_at||'').replace('T',' '))}</span>
+    </div>
+
+    <pre id="body-${it.id}" class="px-4 py-3 text-sm text-slate-800 bg-slate-50 border-b border-slate-100">${esc(it.body)}</pre>
+
+    <div class="flex flex-wrap gap-2 px-4 py-3">
+      <button onclick="copy(${it.id})"
+        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded">
+        Copy
+      </button>
+      <button onclick="markPosted(${it.id})"
+        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded">
+        Mark posted
+      </button>
+      <button onclick="del(${it.id})"
+        class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-600 text-sm font-medium rounded border border-slate-300">
+        Discard
+      </button>
+    </div>
+  </div>`;
+}
+
+async function copy(id){
+  const text = document.getElementById('body-'+id).textContent;
+  try{
+    await navigator.clipboard.writeText(text);
+    flash('Copied. Paste it into the Romania group.');
+  }catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+    flash('Copied. Paste it into the Romania group.');
+  }
+}
+
+async function markPosted(id){
+  const r = await fetch('/api/group/posted/'+id, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({by:'staff'})
+  });
+  if(r.ok){ flash('Marked as posted.'); load(); }
+  else flash('Could not mark as posted.', false);
+}
+
+async function del(id){
+  if(!confirm('Discard this post?')) return;
+  const r = await fetch('/api/group/delete/'+id, {method:'POST'});
+  if(r.ok){ flash('Discarded.'); load(); }
+  else flash('Could not discard.', false);
+}
+
+load();
+setInterval(load, 20000);
+</script>
+</body>
+</html>

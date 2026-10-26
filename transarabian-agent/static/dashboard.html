@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Trans Arabian · Romania WhatsApp Agent — Console</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:#0f172a;color:#e2e8f0}
+  header{background:linear-gradient(90deg,#1e293b,#0ea5e9);padding:18px 24px;display:flex;
+         flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+  header h1{margin:0;font-size:18px;letter-spacing:.3px}
+  header .sub{opacity:.85;font-size:12px}
+  .pills{display:flex;gap:8px;flex-wrap:wrap}
+  .pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+        padding:4px 10px;border-radius:999px;font-size:11px}
+  .pill.on{background:#16a34a;border-color:#22c55e}
+  .pill.off{background:#b91c1c;border-color:#ef4444}
+  main{padding:18px 24px 60px;max-width:1200px;margin:0 auto}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+  .card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px}
+  .card .n{font-size:22px;font-weight:700;color:#38bdf8}
+  .card .l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;opacity:.7}
+  h2{font-size:15px;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid #334155}
+  .box{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px;margin-bottom:12px}
+  .box.warn{border-color:#f59e0b}
+  .box.esc{border-color:#ef4444}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  pre.msg{white-space:pre-wrap;background:#0b1220;border:1px solid #334155;border-radius:8px;
+          padding:12px;font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;
+          max-height:280px;overflow:auto;margin:10px 0}
+  textarea{width:100%;min-height:110px;background:#0b1220;color:#e2e8f0;border:1px solid #334155;
+           border-radius:8px;padding:10px;font:12.5px/1.5 ui-monospace,Menlo,monospace}
+  input,select{background:#0b1220;color:#e2e8f0;border:1px solid #334155;border-radius:8px;padding:8px 10px}
+  button{background:#0ea5e9;color:#04202c;border:0;border-radius:8px;padding:9px 14px;
+         font-weight:700;cursor:pointer}
+  button.ghost{background:transparent;color:#e2e8f0;border:1px solid #475569;font-weight:600}
+  button.danger{background:#ef4444;color:#fff}
+  button.good{background:#22c55e;color:#052e16}
+  .muted{opacity:.65;font-size:12px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #263349}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;opacity:.65}
+  .tag{display:inline-block;background:#0b1220;border:1px solid #334155;border-radius:6px;
+       padding:1px 7px;font-size:11px;margin-right:4px}
+  .empty{opacity:.5;font-style:italic;padding:10px 0}
+  .flash{position:fixed;right:18px;bottom:18px;background:#16a34a;color:#fff;padding:10px 16px;
+         border-radius:10px;display:none;z-index:50}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Trans Arabian (Pvt) Ltd — Romania Section · WhatsApp Agent</h1>
+    <div class="sub">Human-in-the-loop console · embassy mail → formatted WhatsApp</div>
+  </div>
+  <div class="pills" id="pills"></div>
+</header>
+
+<main>
+  <div class="cards" id="cards"></div>
+
+  <div class="row">
+    <button onclick="act('post','/api/email/check',{limit:30,since_days:7},reload)">📬 Check email now</button>
+    <button class="ghost" onclick="act('post','/api/test/simulate',{},reload)">🧪 Rehearse with samples</button>
+    <button class="ghost" onclick="act('post','/api/learn',{},reload)">🧠 Run learning cycle</button>
+    <button class="ghost" onclick="act('post','/api/registry/import',{source:'pdf'},reload)">📥 Reload pending sheet</button>
+    <button class="ghost" onclick="location.href='/api/registry/export'">⬇️ Export registry CSV</button>
+    <span class="muted" id="statusline"></span>
+  </div>
+
+  <h2>🛡️ Transport &amp; reputation</h2>
+  <div class="box" id="healthbox"></div>
+  <div id="qrbox"></div>
+
+  <h2>🧬 32 anti-detection controls</h2>
+  <div class="box">
+    <div class="row" style="justify-content:space-between">
+      <b>Live measurement against Meta's detection signals</b>
+      <span id="stealthgrade" class="muted"></span>
+    </div>
+    <div class="muted" style="margin:6px 0 10px">
+      Type a draft message below to check it against the content controls before it goes out.
+    </div>
+    <textarea id="stealthtext" placeholder="Paste the message you are about to send..."></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="ghost" onclick="loadStealth()">Re-check</button>
+      <span class="muted" id="stealthsummary"></span>
+    </div>
+  </div>
+  <div id="stealthbox"></div>
+
+  <h2>📄 Send documents (human-paced)</h2>
+  <div class="box">
+    <div class="row">
+      <input id="docphone" placeholder="94771234567" style="max-width:180px"/>
+      <input type="file" id="docfiles" multiple/>
+      <button class="ghost" onclick="sendDocs()">Send one at a time (2-5s apart)</button>
+    </div>
+    <div class="muted" style="margin-top:6px">
+      One file per message, 2-5 seconds apart; more than 10 files are bundled into a
+      single ZIP; anything over 100MB is refused.
+    </div>
+    <div class="muted" id="docresult" style="margin-top:8px"></div>
+  </div>
+
+  <h2>✅ Approvals waiting (batches)</h2>
+  <div id="approvals"></div>
+
+  <h2>🆔 Unknown E-numbers — teach the agent</h2>
+  <div id="unknowns"></div>
+
+  <h2>👤 Conversations needing a human</h2>
+  <div id="escalations"></div>
+
+  <h2>📇 WhatsApp contacts → registry</h2>
+  <div class="box">
+    <div class="row">
+      <b>Paste / import contacts</b>
+      <span class="muted">WhatsApp Web list, group participant dump, CSV, PDF, vCF, XLSX</span>
+    </div>
+    <textarea id="ctext" placeholder="Chanchala Kavindi +94 77 123 4567&#10;Madushan Kavinda&#10;+94 75 121 2121"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button onclick="importText()">Import pasted text</button>
+      <button class="ghost" onclick="pullBridge()">📲 Pull from WhatsApp Web</button>
+      <input type="file" id="cfile" accept=".csv,.txt,.tsv,.pdf,.vcf,.xlsx"/>
+      <button class="ghost" onclick="uploadContacts()">Upload file</button>
+      <label class="muted"><input type="checkbox" id="cauto" checked/> auto-link obvious matches</label>
+    </div>
+    <div class="muted" id="csummary" style="margin-top:8px"></div>
+  </div>
+  <div id="contacts"></div>
+
+  <h2>📤 Recent WhatsApp outbox</h2>
+  <div id="outbox"></div>
+
+  <h2>📚 What the agent learned</h2>
+  <div id="lessons"></div>
+</main>
+
+<div class="flash" id="flash"></div>
+
+<script>
+const P = (u,o)=>fetch(u,{headers:{'Content-Type':'application/json'},method:'POST',body:JSON.stringify(o||{})}).then(r=>r.json());
+const G = (u)=>fetch(u).then(r=>r.json());
+const esc = s => (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+async function act(kind,url,body,after){
+  try{ const r = await P(url,body); flash((kind==='post'?'Done: ':'')+(r.ok||r.status||'ok')); if(after) after(r); return r;}
+  catch(e){ flash('Error: '+e.message); }
+}
+function flash(t){const f=document.getElementById('flash');f.textContent=t;f.style.display='block';
+  setTimeout(()=>f.style.display='none',3200);}
+
+async function reload(){
+  const [h,st,tasks,batches,outbox,report] = await Promise.all([
+    G('/api/health'),G('/api/stats'),G('/api/tasks?status=pending&limit=100'),
+    G('/api/batches?limit=20'),G('/api/outbox?limit=25'),G('/api/report')]);
+
+  document.getElementById('pills').innerHTML = [
+    ['IMAP '+h.imap.split('@')[0], true],
+    ['Cloud API', h.cloud_api],['Web bridge', h.web_bridge],['Group', h.group],
+    ['In office hours', h.working_window],
+  ].map(([l,v])=>`<span class="pill ${v?'on':'off'}">${l}</span>`).join('')
+   + `<span class="pill">next poll ${h.next_poll_in_seconds}s</span>`;
+
+  const c = st.counts||{};
+  document.getElementById('cards').innerHTML = [
+    ['Applicants',c.applicants],[ 'With WhatsApp',c.with_phone],['Embassy mails',c.emails],
+    ['Appointments',c.appointments],['Collections',c.collections],
+    ['Open batches',c.batches_open],['Awaiting approval',c.batches_awaiting],
+    ['Human tasks',c.pending_tasks]
+  ].map(([l,n])=>`<div class="card"><div class="n">${n??0}</div><div class="l">${l}</div></div>`).join('');
+
+  // approvals
+  const awaiting = (batches||[]).filter(b=>b.status==='awaiting_approval');
+  const appr = document.getElementById('approvals');
+  if(!awaiting.length) appr.innerHTML = '<div class="empty">Nothing waiting for approval.</div>';
+  else {
+    appr.innerHTML='';
+    for(const b of awaiting){
+      const full = await G('/api/batches/'+b.id);
+      const payload = full.payload||{};
+      const group = (payload.group_messages||[]).map(g=>g.text).join('\n\n');
+      const clients = payload.client_messages||[];
+      const missing = clients.filter(c=>!c.phone).length;
+      const d = document.createElement('div');
+      d.className='box'+(missing?' warn':'');
+      d.innerHTML = `<div class="row" style="justify-content:space-between">
+          <b>${esc(b.kind.toUpperCase())} batch ${esc(b.id)}</b>
+          <span class="muted">${clients.length} applicant(s)${missing?' · ⚠️ '+missing+' without WhatsApp number':''}</span></div>
+        <div class="muted">Group bubbles: ${(payload.group_messages||[]).length}</div>
+        <textarea id="txt-${b.id}">${esc(group)}</textarea>
+        <div class="row" style="margin-top:8px">
+          <button class="good" onclick="approve('${b.id}')">Approve & send</button>
+          <button class="danger" onclick="reject('${b.id}')">Reject</button>
+          <span class="muted">Edit the text first if the office wording changed — the agent saves the new wording as a lesson.</span>
+        </div>
+        <table style="margin-top:10px"><tr><th>Applicant</th><th>E-number</th><th>WhatsApp</th><th>Personal message</th></tr>
+        ${clients.map(c=>`<tr><td>${esc(c.name||'?')}</td><td>${esc(c.e_number||'')}</td>
+          <td>${c.phone?esc(c.phone):'<span class="tag">MISSING</span>'}</td>
+          <td class="muted">${esc((c.text||'').slice(0,90))}</td></tr>`).join('')}
+        </table>`;
+      appr.appendChild(d);
+    }
+  }
+
+  // unknown E numbers
+  const unk = (tasks||[]).filter(t=>t.type==='unknown_applicant'||t.type==='match_review');
+  const u = document.getElementById('unknowns');
+  u.innerHTML = unk.length? '' : '<div class="empty">Every E-number is known. 👍';
+  for(const t of unk){
+    const payload = JSON.parse(t.payload_json||'{}');
+    const d=document.createElement('div'); d.className='box warn';
+    d.innerHTML = `<b>${esc(payload.e_number||'')}</b> <span class="muted">${esc(t.type)}</span>
+      <pre class="msg">${esc(t.detail||'')}</pre>
+      <div class="row">
+        <input id="n-${t.id}" placeholder="Full name (as in passport)" style="min-width:220px"/>
+        <input id="p-${t.id}" placeholder="WhatsApp 94xxxxxxxxx" style="min-width:190px"/>
+        <input id="s-${t.id}" placeholder="SE number (optional)" style="min-width:150px"/>
+        <button onclick="teach(${t.id},'${esc(payload.e_number||'')}')">Save & remember</button>
+      </div>`;
+    u.appendChild(d);
+  }
+
+  // escalations
+  const esc1 = (tasks||[]).filter(t=>t.type==='human_question'||t.type==='unclassified_email');
+  const e = document.getElementById('escalations');
+  e.innerHTML = esc1.length? '' : '<div class="empty">No conversation is waiting for a human.</div>';
+  for(const t of esc1){
+    const d=document.createElement('div'); d.className='box esc';
+    d.innerHTML = `<b>${esc(t.title)}</b><pre class="msg">${esc(t.detail||'')}</pre>
+      <div class="row"><button class="ghost" onclick="closeTask(${t.id})">Mark resolved</button>
+      <span class="muted">The AI stays paused for this number until you resolve it.</span></div>`;
+    e.appendChild(d);
+  }
+
+  loadContacts();
+  loadHealth();
+
+  // outbox
+  document.getElementById('outbox').innerHTML = (outbox||[]).length?
+    `<table><tr><th>Time</th><th>To</th><th>Type</th><th>Kind</th><th>Status</th><th>Message</th></tr>
+     ${outbox.map(o=>`<tr><td>${(o.created_at||'').slice(11,16)}</td><td>${esc((o.phone||'').slice(-10))}</td>
+       <td>${esc(o.target_type)}</td><td>${esc(o.kind)}</td><td>${esc(o.status)}</td>
+       <td class="muted">${esc(o.preview||'')}</td></tr>`).join('')}</table>`
+    : '<div class="empty">Nothing sent yet.</div>';
+
+  // lessons
+  const ls = (report.lessons||[]).map(l=>JSON.parse(l.payload_json||'{}').lesson).filter(Boolean);
+  document.getElementById('lessons').innerHTML =
+    `<pre class="msg">${esc(report.text||'')}</pre>` +
+    (ls.length? `<ul>${ls.slice(0,10).map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`:'');
+}
+
+async function approve(id){
+  const txt = document.getElementById('txt-'+id).value;
+  await act('post','/api/batches/'+id+'/approve',{by:'console',text_override:txt},reload);
+}
+async function reject(id){ await act('post','/api/batches/'+id+'/reject',{by:'console'},reload); }
+async function teach(id,e){
+  const name=document.getElementById('n-'+id).value.trim();
+  const phone=document.getElementById('p-'+id).value.trim();
+  const se=document.getElementById('s-'+id).value.trim();
+  if(!name){flash('Name is required');return;}
+  await act('post','/api/tasks/'+id+'/resolve',{by:'console',status:'done',
+    resolution:{outcome:'good',name:name,whatsapp:phone,se_number:se}},reload);
+}
+async function closeTask(id){
+  await act('post','/api/tasks/'+id+'/resolve',{by:'console',status:'done',resolution:{outcome:'good'}},reload);
+}
+// ---------- contacts ----------
+async function loadContacts(){
+  const r = await G('/api/contacts/review');
+  const s = r.summary||{};
+  document.getElementById('csummary').innerHTML =
+    `contacts ${s.contacts||0} · linked ${s.matched||0} · suggested ${s.suggested||0} ·
+     ambiguous ${s.ambiguous||0} · unmatched ${s.unmatched||0} · conflicts ${s.conflict||0} ·
+     applicants with a number <b>${s.applicants_with_number||0}/${s.applicants_total||0}</b>`;
+  const box = document.getElementById('contacts');
+  const rows = [].concat(
+    (r.suggested||[]).map(c=>[c,'suggested']),
+    (r.ambiguous||[]).map(c=>[c,'ambiguous']),
+    (r.conflict||[]).map(c=>[c,'conflict']),
+    (r.unmatched||[]).map(c=>[c,'unmatched']));
+  if(!rows.length){ box.innerHTML = '<div class="empty">Every imported contact is linked. 👍</div>'; return; }
+  box.innerHTML='';
+  for(const [c,kind] of rows){
+    const best=(c.candidates||[])[0];
+    const d=document.createElement('div'); d.className='box'+(kind==='unmatched'?' warn':'');
+    d.innerHTML = `<div class="row" style="justify-content:space-between">
+        <b>${esc(c.display_name||'(no name)')}</b>
+        <span class="tag">${esc(c.phone)}</span>
+        <span class="muted">${esc(kind)}${c.source?' · '+esc(c.source):''}</span></div>
+      <div class="row" style="margin-top:6px">
+        <select id="sel-${c.phone}" style="min-width:280px">
+          ${(c.candidates||[]).map(x=>`<option value="${esc(x.e_number)}">${esc(x.name)} — ${esc(x.se_number||x.e_number)} (${x.score})</option>`).join('')}
+        </select>
+        <button class="good" onclick="linkContact('${esc(c.phone)}')">Link</button>
+        <button class="ghost" onclick="ignoreContact('${esc(c.phone)}')">Ignore</button>
+        <input id="q-${c.phone}" placeholder="search applicant name / SE / E" style="min-width:230px"
+               oninput="searchApp('${esc(c.phone)}')"/>
+        <select id="res-${c.phone}" style="min-width:240px"></select>
+      </div>`;
+    box.appendChild(d);
+  }
+}
+async function importText(){
+  const t=document.getElementById('ctext').value;
+  if(!t.trim()){flash('Paste the contacts first');return;}
+  const r=await act('post','/api/contacts/import',{text:t,source:'console_paste',
+    auto_apply:document.getElementById('cauto').checked});
+  if(r){document.getElementById('ctext').value='';}
+  await loadContacts(); reload();
+}
+async function uploadContacts(){
+  const f=document.getElementById('cfile').files[0];
+  if(!f){flash('Choose a file first');return;}
+  const fd=new FormData(); fd.append('file',f);
+  fd.append('auto_apply', document.getElementById('cauto').checked?'true':'false');
+  const r=await fetch('/api/contacts/upload',{method:'POST',body:fd}).then(x=>x.json());
+  flash(r.parsed?`parsed ${r.parsed} · linked ${r.auto_linked}`:'import failed');
+  await loadContacts(); reload();
+}
+async function pullBridge(){
+  const r=await act('post','/api/contacts/pull-bridge',{auto_apply:document.getElementById('cauto').checked});
+  if(r&&r.error) flash('Bridge: '+r.error);
+  await loadContacts(); reload();
+}
+async function linkContact(phone){
+  const sel=document.getElementById('sel-'+phone);
+  const alt=document.getElementById('res-'+phone);
+  const e=(alt&&alt.value)||(sel&&sel.value);
+  if(!e){flash('Pick an applicant (or search for one)');return;}
+  await act('post','/api/contacts/'+phone+'/link',{e_number:e,by:'console'},null);
+  await loadContacts(); reload();
+}
+async function ignoreContact(phone){
+  await act('post','/api/contacts/'+phone+'/ignore',{},null);
+  await loadContacts();
+}
+async function searchApp(phone){
+  const q=document.getElementById('q-'+phone).value;
+  if(q.length<2) return;
+  const r=await G('/api/contacts/search?q='+encodeURIComponent(q));
+  const sel=document.getElementById('res-'+phone);
+  sel.innerHTML=(r||[]).map(a=>`<option value="${esc(a.e_number)}">${esc(a.name)} — ${esc(a.se_number||a.e_number)}${a.whatsapp?' (has number)':''}</option>`).join('');
+}
+
+// ---------- transport + risk ----------
+async function loadHealth(){
+  const [t, r] = await Promise.all([G('/api/transports'), G('/api/risk')]);
+  const a = r.assessment||{}, p = r.pacing||{};
+  const lvl = a.level||'ok';
+  const col = lvl==='halted'?'#ef4444':(lvl==='throttle'?'#f59e0b':(lvl==='warn'?'#eab308':'#22c55e'));
+  const evo = t.evolution||{}, br = t.bridge||{}, cl = t.cloud_api||{};
+  document.getElementById('healthbox').innerHTML = `
+    <div class="row" style="justify-content:space-between">
+      <b>Transports</b>
+      <span class="muted">Meta Cloud API ${(cl.check&&cl.check.ok)?'<span class="pill on">ready</span>':'<span class="pill off">'+(cl.check?esc(String(cl.check.error||cl.check.reason||'not working')).slice(0,42):'not set')+'</span>'}
+        · Evolution ${evo.enabled?(evo.alive?'<span class="pill on">open</span>':'<span class="pill off">'+esc(String(evo.state))+'</span>'):'<span class="pill off">off</span>'}
+        · Bridge ${br.enabled?'<span class="pill on">on</span>':'<span class="pill off">off</span>'}
+        · Group ${t.group_jid?'<span class="pill on">set</span>':'<span class="pill off">missing</span>'}</span>
+    </div>
+    <div class="row" style="margin-top:10px;align-items:center">
+      <div style="flex:1;min-width:220px">
+        <div class="muted">Ban-risk score <b style="color:${col}">${(a.risk*100||0).toFixed(0)}%</b>
+          · level <b style="color:${col}">${esc(lvl)}</b> · sending at ${Math.round((p.multiplier?1/p.multiplier:1)*100)}% speed</div>
+        <div style="background:#0b1220;border:1px solid #334155;border-radius:8px;height:10px;margin-top:6px">
+          <div style="width:${Math.min(100,(a.risk*100)||0)}%;height:100%;background:${col};border-radius:8px"></div></div>
+      </div>
+      <button class="ghost" onclick="riskResume()">Resume sending</button>
+      <button class="ghost" onclick="loadQR()">Show pairing QR</button>
+    </div>
+    <div class="muted" style="margin-top:8px">
+      24h: ${a.raw_24h?a.raw_24h.sent_24h:0} sent · ${a.raw_24h?a.raw_24h.failed_24h:0} failed ·
+      ${a.raw_24h?a.raw_24h.optout_24h:0} opt-outs · ${a.raw_24h?a.raw_24h.block_hint_24h:0} undeliverable ·
+      ${a.raw_24h?a.raw_24h.inbound_24h:0} replies · model ${a.learned?'trained on '+a.samples+' days':'using priors'}
+      ${(a.floors&&a.floors.length)?'<br>⚠️ '+esc(a.floors.join(' · ')):''}
+      ${a.halted?'<br>🛑 <b>'+esc(a.halt_reason||'sending halted')+'</b>':''}
+    </div>`;
+}
+async function loadStealth(){
+  const txt = document.getElementById('stealthtext').value || '';
+  const r = await G('/api/stealth/checklist?phone=&text='+encodeURIComponent(txt));
+  const col = {pass:'#22c55e', warn:'#eab308', fail:'#ef4444'}[r.grade==='healthy'?'pass':(r.grade==='caution'?'warn':'fail')];
+  document.getElementById('stealthgrade').innerHTML =
+    `<b style="color:${col}">${esc(r.grade)}</b> · ${r.summary.pass} pass / ${r.summary.warn} warn / ${r.summary.fail} fail`;
+  document.getElementById('stealthsummary').textContent =
+    `ban-risk ${(r.summary.risk*100).toFixed(0)}% · ${esc(r.summary.level)}${r.summary.halted?' · HALTED':''}`;
+  document.getElementById('stealthbox').innerHTML = `
+    <table style="width:100%;border-collapse:collapse">
+    <tr class="muted" style="text-align:left">
+      <th style="width:34px">#</th><th>Meta detection vector</th><th>Control</th><th style="width:150px">Live value</th><th style="width:66px">State</th></tr>
+    ${r.items.map(i=>`<tr style="border-top:1px solid #1e293b">
+      <td class="muted">${i.id}</td>
+      <td>${esc(i.vector)}</td>
+      <td class="muted">${esc(i.control)}</td>
+      <td class="muted">${esc(String(i.value))}</td>
+      <td><span class="pill ${i.status==='pass'?'on':'off'}">${i.status}</span></td>
+    </tr>`).join('')}
+    </table>`;
+}
+async function sendDocs(){
+  const phone = document.getElementById('docphone').value.trim();
+  const files = document.getElementById('docfiles').files;
+  if(!phone || !files.length){ flash('phone and at least one file are needed'); return; }
+  const fd = new FormData();
+  fd.append('phone', phone);
+  for(const f of files) fd.append('files', f);
+  const r = await fetch('/api/documents/upload-and-send',{method:'POST',body:fd}).then(x=>x.json());
+  document.getElementById('docresult').textContent = JSON.stringify(r);
+  flash(r.sent ? r.sent+' file(s) sent' : (r.error||'nothing sent'));
+  loadHealth();
+}
+async function riskResume(){ await act('post','/api/risk/resume',{by:'console'},loadHealth); }
+async function loadQR(){
+  const r = await G('/api/evolution/qr');
+  const box = document.getElementById('qrbox');
+  if(!r.qr){ box.innerHTML = `<div class="box"><b>Evolution state:</b> ${esc(String(r.state))}
+     <div class="muted">No QR returned - the instance may already be connected, or the
+     Evolution server is not reachable. Start it with the docker command in the README.</div></div>`; return; }
+  box.innerHTML = `<div class="box"><b>Scan to link WhatsApp</b>
+    <div class="muted">WhatsApp → ⋮ → Linked devices → Link a device</div>
+    <img alt="pairing qr" src="${r.qr}" style="background:#fff;padding:10px;border-radius:10px;margin-top:8px;max-width:260px"/>
+    ${r.pairing_code?`<div class="muted">or enter pairing code: <b>${esc(r.pairing_code)}</b></div>`:''}</div>`;
+}
+
+async function reloadAll(){ await reload(); await loadStealth(); }
+reloadAll(); setInterval(reloadAll, 30000);
+</script>
+</body>
+</html>

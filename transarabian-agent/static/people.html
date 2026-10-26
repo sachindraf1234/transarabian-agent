@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>People — Trans Arabian Romania Visa</title>
+<script src="/static/tailwind.js"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: { ink:'#0f172a', brand:'#0ea5e9', good:'#16a34a', warn:'#f59e0b', bad:'#dc2626' },
+    fontFamily: { sans: ['ui-sans-serif','system-ui','Segoe UI','Roboto','sans-serif'] }
+  }}}
+</script>
+<style>
+  html{scroll-behavior:smooth}
+  .card{border-radius:1rem;box-shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.25)}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  #toasts{position:fixed;right:1rem;bottom:1rem;z-index:60}
+  .pop-in{animation:pop .18s ease-out}
+  @keyframes pop{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 text-[15px] leading-relaxed">
+
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
+    <a href="/" class="px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-50">← Console</a>
+    <div>
+      <h1 class="text-lg font-bold text-ink">People</h1>
+      <p class="text-sm text-slate-500">Add an applicant, or fix a wrong detail.</p>
+    </div>
+    <div class="ml-auto text-sm text-slate-500" id="counts"></div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-6">
+
+  <!-- search + filters -->
+  <section class="card bg-white p-4 mb-5">
+    <div class="flex flex-wrap items-end gap-3">
+      <div class="grow" style="min-width:260px">
+        <label class="block text-sm font-semibold text-slate-600 mb-1">Search</label>
+        <input id="q" placeholder="name, E-number, SE number, passport or phone"
+               class="w-full px-3 py-2 rounded-lg border border-slate-300"/>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-600 mb-1">Show</label>
+        <select id="filter" class="px-3 py-2 rounded-lg border border-slate-300">
+          <option value="">Everyone</option>
+          <option value="phone">Missing a WhatsApp number</option>
+          <option value="e">Missing an E-number</option>
+          <option value="passport">Missing a passport number</option>
+          <option value="anything">Anything incomplete</option>
+        </select>
+      </div>
+      <button id="addBtn" class="px-4 py-2 rounded-lg bg-brand text-white font-semibold hover:opacity-90">
+        + Add person
+      </button>
+    </div>
+  </section>
+
+
+  <!-- read a document -->
+  <section class="card bg-white p-4 mb-5">
+    <h2 class="font-bold text-ink mb-1">Read a sheet</h2>
+    <p class="text-sm text-slate-500 mb-3">
+      Upload a PDF, photo or scan. We read it and check every field, but
+      <b>save nothing until you say so</b>. Anything we cannot read with
+      confidence is listed for you to look at.
+    </p>
+    <div class="flex flex-wrap items-center gap-3">
+      <input id="doc" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.bmp,.tif,.tiff"
+             class="text-sm"/>
+      <button id="readBtn" class="px-4 py-2 rounded-lg bg-ink text-white font-semibold hover:opacity-90">
+        Read it
+      </button>
+      <span id="docStatus" class="text-sm text-slate-500"></span>
+    </div>
+    <div id="docResult" class="mt-4 hidden"></div>
+  </section>
+
+  <!-- table -->
+  <section class="card bg-white overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 text-slate-600 text-left">
+        <tr>
+          <th class="p-3">Name</th>
+          <th class="p-3">SE number</th>
+          <th class="p-3">E-number</th>
+          <th class="p-3">Passport</th>
+          <th class="p-3">WhatsApp</th>
+          <th class="p-3">Company</th>
+          <th class="p-3"></th>
+        </tr>
+      </thead>
+      <tbody id="rows" class="divide-y divide-slate-100"></tbody>
+    </table>
+    <div id="empty" class="p-8 text-center text-slate-500 hidden">No one matches.</div>
+  </section>
+
+  <!-- edit / add panel -->
+  <section id="panel" class="card bg-white p-5 mt-5 hidden">
+    <h2 id="panelTitle" class="text-lg font-bold text-ink mb-1"></h2>
+    <p id="panelSub" class="text-sm text-slate-500 mb-4"></p>
+
+    <div class="grid gap-4" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+      <div><label class="block text-sm font-semibold text-slate-600 mb-1">Full name</label>
+        <input id="f_name" class="w-full px-3 py-2 rounded-lg border border-slate-300"/>
+        <p class="text-xs text-slate-400 mt-1">Letters only. Capital letters are fine.</p></div>
+
+      <div><label class="block text-sm font-semibold text-slate-600 mb-1">SE number</label>
+        <input id="f_se_number" placeholder="SE2447739" class="w-full px-3 py-2 rounded-lg border border-slate-300 mono"/></div>
+
+      <div><label class="block text-sm font-semibold text-slate-600 mb-1">E-number</label>
+        <input id="f_e_number" placeholder="E24605764875104" class="w-full px-3 py-2 rounded-lg border border-slate-300 mono"/>
+        <p class="text-xs text-slate-400 mt-1">Leave blank if the embassy has not issued one yet.</p></div>
+
+      <div><label class="block text-sm font-semibold text-slate-600 mb-1">Passport number</label>
+        <input id="f_passport_no" placeholder="N1234567" class="w-full px-3 py-2 rounded-lg border border-slate-300 mono"/></div>
+
+      <div><label class="block text-sm font-semibold text-slate-600 mb-1">WhatsApp number</label>
+        <input id="f_whatsapp" placeholder="077 123 4567" class="w-full px-3 py-2 rounded-lg border border-slate-300 mono"/>
+        <p class="text-xs text-slate-400 mt-1">We store it as 94… with no spaces.</p></div>
+
+      <div><label class="block text-sm font-semibold text-slate-600 mb-1">Company</label>
+        <input id="f_company" class="w-full px-3 py-2 rounded-lg border border-slate-300"/></div>
+
+      <div><label class="block text-sm font-semibold text-slate-600 mb-1">Applied to embassy on</label>
+        <input id="f_embassy_applied_date" placeholder="7/7/2026" class="w-full px-3 py-2 rounded-lg border border-slate-300"/></div>
+
+      <div><label class="block text-sm font-semibold text-slate-600 mb-1">Language</label>
+        <select id="f_language" class="w-full px-3 py-2 rounded-lg border border-slate-300">
+          <option value="si">Sinhala</option>
+          <option value="en">English</option>
+        </select></div>
+    </div>
+
+    <div class="mt-4">
+      <label class="block text-sm font-semibold text-slate-600 mb-1">Notes</label>
+      <textarea id="f_notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-slate-300"></textarea>
+    </div>
+
+    <div id="problems" class="mt-4 hidden"></div>
+
+    <div class="mt-5 flex flex-wrap gap-3">
+      <button id="saveBtn" class="px-5 py-2 rounded-lg bg-good text-white font-semibold hover:opacity-90">Save</button>
+      <button id="cancelBtn" class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50">Cancel</button>
+      <button id="deleteBtn" class="ml-auto px-4 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 hidden">
+        Remove this person
+      </button>
+    </div>
+
+    <div id="history" class="mt-5 hidden">
+      <h3 class="text-sm font-bold text-slate-600 mb-2">Recent changes</h3>
+      <div id="historyRows" class="text-xs text-slate-500 space-y-1"></div>
+    </div>
+  </section>
+</main>
+
+<div id="toasts" class="space-y-2"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let currentKey = null;
+
+function toast(msg, kind='good'){
+  const el = document.createElement('div');
+  const bg = kind==='bad' ? 'bg-red-600' : kind==='warn' ? 'bg-amber-500' : 'bg-green-600';
+  el.className = `pop-in ${bg} text-white px-4 py-2 rounded-lg shadow text-sm max-w-md`;
+  el.textContent = msg;
+  $('toasts').appendChild(el);
+  setTimeout(()=>el.remove(), 6000);
+}
+
+async function api(url, opts){
+  const r = await fetch(url, opts);
+  const t = await r.text();
+  let j; try { j = JSON.parse(t); } catch(e){ j = {detail:t}; }
+  if(!r.ok){
+    const d = j.detail;
+    const msg = (d && d.errors) ? d.errors.map(e=>e.message).join('\n')
+              : (typeof d === 'string' ? d : (j.message || 'Something went wrong'));
+    throw new Error(msg);
+  }
+  return j;
+}
+
+function flag(problem){
+  const colour = problem==='no WhatsApp number' ? 'bg-amber-100 text-amber-800'
+               : problem==='no E-number yet'   ? 'bg-sky-100 text-sky-800'
+               : 'bg-slate-100 text-slate-700';
+  return `<span class="px-2 py-0.5 rounded-full text-xs ${colour}">${esc(problem)}</span>`;
+}
+
+async function load(){
+  const params = new URLSearchParams();
+  if($('q').value.trim()) params.set('q', $('q').value.trim());
+  if($('filter').value)   params.set('missing', $('filter').value);
+  const d = await api('/api/people?'+params.toString());
+  $('counts').textContent = d.count + ' shown';
+  $('rows').innerHTML = d.people.map(p=>{
+    const miss = (p.missing||[]).map(flag).join(' ');
+    return `<tr class="hover:bg-slate-50">
+      <td class="p-3 font-semibold text-ink">${esc(p.name)}</td>
+      <td class="p-3 mono">${esc(p.se_number)||'<span class="text-slate-300">—</span>'}</td>
+      <td class="p-3 mono">${String(p.e_number||'').startsWith('E')?esc(p.e_number):'<span class="text-slate-300">not yet</span>'}</td>
+      <td class="p-3 mono">${esc(p.passport_no)||'<span class="text-slate-300">—</span>'}</td>
+      <td class="p-3 mono">${esc(p.whatsapp)||'<span class="text-amber-600">none</span>'}</td>
+      <td class="p-3">${esc(p.company)||''}</td>
+      <td class="p-3 text-right whitespace-nowrap">
+        ${miss?'<div class="mb-1">'+miss+'</div>':''}
+        <button onclick="openEdit('${esc(p.e_number)}')"
+          class="px-3 py-1 rounded-lg border border-slate-300 hover:bg-slate-100 text-sm">Edit</button>
+      </td></tr>`;
+  }).join('');
+  $('empty').classList.toggle('hidden', d.people.length>0);
+}
+
+const FIELDS = ['name','se_number','e_number','passport_no','whatsapp','company',
+                'embassy_applied_date','language','notes'];
+
+function clearPanel(){
+  FIELDS.forEach(f=>{ $('f_'+f).value=''; });
+  $('problems').classList.add('hidden');
+  $('problems').innerHTML='';
+}
+
+function openAdd(){
+  currentKey = null;
+  clearPanel();
+  $('panelTitle').textContent = 'Add a person';
+  $('panelSub').textContent = 'An SE number or an E-number is needed, so this person can be told apart from everyone else.';
+  $('deleteBtn').classList.add('hidden');
+  $('history').classList.add('hidden');
+  $('panel').classList.remove('hidden');
+  $('panel').scrollIntoView();
+  $('f_name').focus();
+}
+
+async function openEdit(key){
+  currentKey = key;
+  clearPanel();
+  const p = await api('/api/people/'+encodeURIComponent(key));
+  FIELDS.forEach(f=>{
+    const v = p[f];
+    $('f_'+f).value = (f==='e_number' && v && !String(v).startsWith('E')) ? '' : (v==null?'':v);
+  });
+  $('panelTitle').textContent = p.name || key;
+  const bits = [];
+  if(p.se_number)     bits.push('SE '+p.se_number);
+  if(p.passport_no)   bits.push('passport '+p.passport_no);
+  if(p.company)       bits.push(p.company);
+  $('panelSub').textContent = bits.join(' · ');
+  $('deleteBtn').classList.remove('hidden');
+  $('panel').classList.remove('hidden');
+  $('panel').scrollIntoView();
+
+  try {
+    const h = await api('/api/people/history/'+encodeURIComponent(key));
+    if(h.length){
+      $('history').classList.remove('hidden');
+      $('historyRows').innerHTML = h.slice(0,12).map(e=>
+        `<div>${esc(e.at)} — <b>${esc(e.field)}</b> ${esc(e.old||'(empty)')} → ${esc(e.new||'(empty)')} <span class="text-slate-400">by ${esc(e.by)}</span></div>`
+      ).join('');
+    } else { $('history').classList.add('hidden'); }
+  } catch(e){ $('history').classList.add('hidden'); }
+}
+
+function showProblems(list){
+  const box = $('problems');
+  if(!list.length){ box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  box.innerHTML = list.map(p=>{
+    const warn = p.warning;
+    const bg = warn ? 'bg-amber-50 border-amber-300 text-amber-800'
+                    : 'bg-red-50 border-red-300 text-red-700';
+    const title = warn ? 'Warning' : 'Not saved';
+    return `<div class="border ${bg} rounded-lg px-3 py-2 text-sm"><b>${title}:</b> ${esc(p.message)}</div>`;
+  }).join(' ');
+}
+
+async function save(){
+  const body = { by:'console' };
+  FIELDS.forEach(f=>{ body[f] = $('f_'+f).value; });
+  const warnings = [];
+  try{
+    const res = currentKey
+      ? await api('/api/people/'+encodeURIComponent(currentKey), {
+          method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
+      : await api('/api/people', {
+          method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    (res.warnings||[]).forEach(w=>warnings.push(w));
+    showProblems(warnings);
+    toast(currentKey ? 'Saved' : 'Added');
+    if(!warnings.length){ $('panel').classList.add('hidden'); }
+    load();
+  }catch(e){
+    const lines = String(e.message).split('\n');
+    showProblems(lines.map(m=>({message:m})));
+    toast('Nothing was saved — see the message above', 'bad');
+  }
+}
+
+async function remove(){
+  if(!currentKey) return;
+  const name = $('panelTitle').textContent;
+  if(!confirm(`Remove ${name} from the registry?\n\nThis deletes their record. It cannot be undone.`)) return;
+  try{
+    const r = await api('/api/people/'+encodeURIComponent(currentKey), {method:'DELETE'});
+    toast('Removed ' + r.removed);
+    $('panel').classList.add('hidden');
+    load();
+  }catch(e){ toast(e.message, 'bad'); }
+}
+
+
+let docRows = [];
+
+$('readBtn').onclick = async () => {
+  const f = $('doc').files[0];
+  if(!f){ toast('Choose a file first','warn'); return; }
+  $('docStatus').textContent = 'Reading… (a scan can take a minute)';
+  $('readBtn').disabled = true;
+  const form = new FormData(); form.append('file', f);
+  try{
+    const r = await fetch('/api/people/documents/read', {method:'POST', body:form});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.detail || 'Could not read that file');
+    docRows = d.rows;
+    $('docStatus').textContent = '';
+    renderDoc(d);
+  }catch(e){ $('docStatus').textContent=''; toast(String(e.message),'bad'); }
+  finally{ $('readBtn').disabled = false; }
+};
+
+function renderDoc(d){
+  const errs = d.problems.filter(p=>p.level==='error');
+  const notes = d.problems.filter(p=>p.level==='note');
+  $('docResult').classList.remove('hidden');
+  $('docResult').innerHTML = `
+    <div class="rounded-lg border p-3 mb-3 ${errs.length?'border-amber-300 bg-amber-50':'border-green-300 bg-green-50'}">
+      <div class="font-semibold">Read ${d.row_count} people from ${d.pages} page(s)
+        — ${Math.round(d.field_completeness*100)}% of fields found</div>
+      <div class="text-sm mt-1">${(d.notes||[]).map(esc).join('<br>')}</div>
+      <div class="text-sm mt-2"><b>${errs.length}</b> must be fixed before saving,
+        ${notes.length} things to glance at.</div>
+    </div>
+    ${errs.length?`<div class="rounded-lg border border-red-300 bg-red-50 p-3 mb-3">
+      <div class="font-semibold text-red-700 mb-1">Must be checked by you:</div>
+      ${errs.map(p=>`<div class="text-sm">· ${esc(p.where)}: ${esc(p.message)}</div>`).join('')}
+    </div>`:''}
+    ${notes.length?`<details class="mb-3"><summary class="cursor-pointer text-sm text-slate-600">
+      ${notes.length} note(s)</summary>
+      <div class="text-xs text-slate-500 mt-2 space-y-1">
+      ${notes.slice(0,30).map(p=>`<div>· ${esc(p.where)}: ${esc(p.message)}</div>`).join('')}
+      </div></details>`:''}
+    <div class="max-h-72 overflow-auto border rounded-lg">
+      <table class="w-full text-xs">
+        <tr class="bg-slate-50 text-left"><th class="p-2">Name</th><th class="p-2">SE</th>
+          <th class="p-2">E-number</th><th class="p-2">Passport</th><th class="p-2">Phone</th></tr>
+        ${d.rows.slice(0,200).map(r=>`<tr class="border-t">
+          <td class="p-2">${esc(r.name)}</td><td class="p-2 mono">${esc(r.se_number)}</td>
+          <td class="p-2 mono">${esc(r.e_number)}</td><td class="p-2 mono">${esc(r.passport_no)}</td>
+          <td class="p-2 mono">${esc(r.whatsapp)||'<span class="text-amber-600">unreadable</span>'}</td>
+        </tr>`).join('')}
+      </table>
+    </div>
+    <div class="mt-3 flex gap-3">
+      <button id="applyBtn" class="px-4 py-2 rounded-lg bg-good text-white font-semibold">
+        Save — fill what's missing, add anyone new
+      </button>
+      <span class="text-xs text-slate-500 self-center">Rows with an error are left out.</span>
+    </div>`;
+  $('applyBtn').onclick = applyDoc;
+}
+
+async function applyDoc(){
+  if(!docRows.length) return;
+  if(!confirm('Save these people into the registry? Rows with an error will be skipped.')) return;
+  try{
+    const r = await fetch('/api/people/documents/apply', {method:'POST',
+      headers:{'Content-Type':'application/json'}, body: JSON.stringify({rows: docRows})});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.detail ? JSON.stringify(d.detail) : 'Save failed');
+    toast(`Filled in ${d.filled} · added ${d.added} · untouched ${d.unchanged}`
+          + (d.skipped.length ? ` · skipped ${d.skipped.length}` : ''));
+    if(d.skipped.length){
+      alert('These rows were left alone:\n\n' +
+        d.skipped.map(x=>`· ${x.where}: ${x.reason}`).join('\n'));
+    }
+    $('docResult').classList.add('hidden');
+    load();
+  }catch(e){ toast(String(e.message),'bad'); }
+}
+
+$('addBtn').onclick = openAdd;
+$('saveBtn').onclick = save;
+$('cancelBtn').onclick = ()=>$('panel').classList.add('hidden');
+$('deleteBtn').onclick = remove;
+$('q').addEventListener('input', ()=>{ clearTimeout(window._t); window._t=setTimeout(load, 250); });
+$('filter').onchange = load;
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Trans Arabian — Romania Visa Agent</title>
+<script src="/static/tailwind.js"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: { ink:'#0f172a', brand:'#0ea5e9', good:'#16a34a', warn:'#f59e0b', bad:'#dc2626' },
+      fontFamily: { sans: ['ui-sans-serif','system-ui','Segoe UI','Roboto','sans-serif'] }
+    }}
+  }
+</script>
+<style>
+  html { scroll-behavior:smooth }
+  .card { border-radius:1rem; box-shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.25) }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace }
+  .blink { animation:blink 1.4s ease-in-out infinite }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+  .pop-in { animation:pop .18s ease-out }
+  @keyframes pop { from{transform:scale(.96);opacity:0} to{transform:scale(1);opacity:1} }
+  #toasts { position:fixed; right:1rem; bottom:1rem; z-index:60 }
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 text-[15px] leading-relaxed">
+
+<!-- ============================ TOP BAR ============================ -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
+  <div class="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3 flex-wrap">
+    <div class="h-10 w-10 rounded-xl bg-brand text-white grid place-items-center text-xl font-bold">TA</div>
+    <div class="mr-auto">
+      <div class="font-bold text-ink text-lg leading-tight">Trans Arabian — Romania Visa Agent</div>
+      <div class="text-xs text-slate-500" id="subline">Loading…</div>
+    </div>
+    <span id="statusPill" class="px-3 py-1.5 rounded-full text-sm font-semibold bg-slate-200 text-slate-700">…</span>
+    <button onclick="enableDesktopAlerts()" id="bellBtn"
+      class="px-3 py-1.5 rounded-lg border border-slate-300 text-sm font-medium hover:bg-slate-50">
+      🔔 Turn on desktop alerts
+    </button>
+    <button onclick="haltAgent()" class="px-3 py-1.5 rounded-lg border border-red-300 text-red-600 text-sm font-medium hover:bg-red-50">
+      Stop everything
+    </button>
+    <button onclick="resumeAgent()" class="px-3 py-1.5 rounded-lg bg-good text-white text-sm font-medium hover:opacity-90">
+      Start again
+    </button>
+  </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-4 py-6 space-y-8">
+
+  <!-- ======================== BIG NUMBERS ======================== -->
+  <section>
+    <h1 class="text-2xl font-bold text-ink">Right now</h1>
+    <p class="text-slate-500 text-sm">A quick look at what the agent is doing today.</p>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="card bg-white p-5">
+        <div class="text-3xl font-bold text-ink" id="nWatch">0</div>
+        <div class="font-semibold">Files I'm watching</div>
+        <div class="text-xs text-slate-500">Visa files from the embassy mail.</div>
+      </div>
+      <div class="card bg-white p-5">
+        <div class="text-3xl font-bold text-ink" id="nSent">0</div>
+        <div class="font-semibold">Messages sent today</div>
+        <div class="text-xs text-slate-500">Sent slowly, like a person would.</div>
+      </div>
+      <div class="card bg-white p-5">
+        <div class="text-3xl font-bold text-ink" id="nMail">0</div>
+        <div class="font-semibold">Embassy e-mails read</div>
+        <div class="text-xs text-slate-500">Checked every 15 minutes, 9am–5pm.</div>
+      </div>
+      <div class="card bg-white p-5" id="helpCard">
+        <div class="text-3xl font-bold" id="nHelp">0</div>
+        <div class="font-semibold">Things that need you</div>
+        <div class="text-xs text-slate-500">The agent stops and asks when it is unsure.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== NEEDS YOU ======================== -->
+  <section id="help">
+    <div class="flex items-end justify-between flex-wrap gap-2">
+      <div>
+        <h2 class="text-2xl font-bold text-ink">🙋 Things that need a person</h2>
+        <p class="text-slate-500 text-sm">The agent does the rest by itself. These are the only ones it cannot decide alone.</p>
+      </div>
+      <button onclick="loadAll()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-sm hover:bg-white">Refresh</button>
+    </div>
+    <div id="alerts" class="mt-4 space-y-3"></div>
+  </section>
+
+  <!-- ======================== TODAY'S WORK ======================== -->
+  <section id="work">
+    <h2 class="text-2xl font-bold text-ink">📋 Ready to send</h2>
+    <p class="text-slate-500 text-sm">Lists the agent has prepared. Read it, then press <b>Send it</b>.</p>
+    <div id="batches" class="mt-4 space-y-4"></div>
+  </section>
+
+  <!-- ======================== FILES ======================== -->
+  <section id="files">
+    <h2 class="text-2xl font-bold text-ink">👀 Files I'm watching</h2>
+    <p class="text-slate-500 text-sm">Every applicant's file moves left to right through these 6 steps. The number is how many files are sitting there right now.</p>
+
+    <div class="card bg-white p-4 mt-4">
+      <div id="stepsBar" class="flex flex-wrap items-stretch gap-2 text-sm"></div>
+      <div id="stepsHelp" class="mt-3 text-sm text-slate-600 hidden"></div>
+      <div class="mt-4 flex gap-2 flex-wrap">
+        <input id="search" oninput="renderFiles()" placeholder="Search a name or E-number…"
+          class="flex-1 min-w-[220px] px-3 py-2 rounded-lg border border-slate-300"/>
+        <button onclick="scanNow()" class="px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">Check for stuck files</button>
+        <button onclick="openWatch()" class="px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">+ Watch a file</button>
+      </div>
+      <div id="watchForm" class="hidden mt-3 grid gap-2 sm:grid-cols-4">
+        <input id="wE" placeholder="E-number (E2427…)" class="px-3 py-2 rounded-lg border border-slate-300"/>
+        <input id="wName" placeholder="Applicant name" class="px-3 py-2 rounded-lg border border-slate-300"/>
+        <input id="wSe" placeholder="SE number (optional)" class="px-3 py-2 rounded-lg border border-slate-300"/>
+        <button onclick="addWatch()" class="px-3 py-2 rounded-lg bg-brand text-white font-medium">Start watching</button>
+      </div>
+    </div>
+
+    <div class="card bg-white mt-4 overflow-hidden">
+      <div class="max-h-[26rem] overflow-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-500 text-left sticky top-0">
+            <tr><th class="p-3">Applicant / file</th><th class="p-3">Step</th><th class="p-3">Date</th><th class="p-3">WhatsApp</th><th class="p-3"></th></tr>
+          </thead>
+          <tbody id="filesBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SAFETY ======================== -->
+  <section id="safety">
+    <h2 class="text-2xl font-bold text-ink">🛡️ How safe am I?</h2>
+    <p class="text-slate-500 text-sm">40 checks that keep the agent behaving like a real office assistant, so WhatsApp does not block the number.</p>
+    <div class="card bg-white p-5 mt-4">
+      <div class="flex items-center gap-4 flex-wrap">
+        <div id="grade" class="text-2xl font-bold">…</div>
+        <div class="flex-1 min-w-[220px]">
+          <div class="text-xs text-slate-500 mb-1">Checks passing</div>
+          <div class="h-3 rounded-full bg-slate-200 overflow-hidden">
+            <div id="gradeBar" class="h-full bg-good" style="width:0%"></div>
+          </div>
+          <div id="gradeText" class="text-xs text-slate-500 mt-1"></div>
+        </div>
+        <div class="min-w-[150px]">
+          <div class="text-xs text-slate-500 mb-1">
+            Ban risk <span id="riskWord" class="font-semibold"></span>
+          </div>
+          <div class="h-3 rounded-full bg-slate-200 overflow-hidden">
+            <div id="riskBar" class="h-full bg-good" style="width:0%"></div>
+          </div>
+          <div class="text-xs text-slate-500 mt-1">
+            <b id="riskPct">0%</b> · speed <b id="speed">100%</b>
+          </div>
+        </div>
+        <button onclick="loadSafety()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-sm hover:bg-slate-50">Re-check</button>
+      </div>
+      <details class="mt-4">
+        <summary class="cursor-pointer font-semibold">Show all 40 checks</summary>
+        <div id="controls" class="mt-3 space-y-1"></div>
+      </details>
+      <details class="mt-3">
+        <summary class="cursor-pointer font-semibold">What WhatsApp checks, and what we do</summary>
+        <div id="coverage" class="mt-3 space-y-2"></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ======================== CONNECTIONS ======================== -->
+  <section id="setup">
+    <h2 class="text-2xl font-bold text-ink">🔌 Connections</h2>
+    <p class="text-slate-500 text-sm">If something is orange or red, the agent cannot do that part yet.</p>
+    <div id="conn" class="mt-4 grid gap-4 sm:grid-cols-3"></div>
+
+    <div class="card bg-white p-5 mt-4">
+      <h3 class="font-bold">Paste WhatsApp contacts (names + numbers)</h3>
+      <p class="text-sm text-slate-500">Copy the list from WhatsApp Web or a group, paste it here, and the agent will match names to files.</p>
+      <textarea id="ctext" rows="4" placeholder="Chanchala Kavindi +94 77 123 4567&#10;Madushan Kavinda +94 75 121 2121"
+        class="mt-3 w-full px-3 py-2 rounded-lg border border-slate-300 mono text-sm"></textarea>
+      <div class="mt-3 flex gap-2 flex-wrap items-center">
+        <button onclick="importContacts()" class="px-4 py-2 rounded-lg bg-brand text-white font-medium">Match them to my files</button>
+        <input type="file" id="cfile" accept=".csv,.txt,.tsv,.pdf,.vcf,.xlsx" class="text-sm"/>
+        <button onclick="uploadContacts()" class="px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">Upload a file</button>
+        <span id="csummary" class="text-sm text-slate-500"></span>
+      </div>
+    </div>
+
+    <div class="card bg-white p-5 mt-4">
+      <h3 class="font-bold">WhatsApp webhook <span id="whBadge" class="ml-2 text-xs font-semibold text-slate-400">checking…</span></h3>
+      <p class="text-sm text-slate-500">Copy these into Meta → App Dashboard → WhatsApp → Configuration, then click <b>Verify and save</b> and subscribe the field <b>messages</b>.</p>
+      <div class="mt-3 grid gap-3 sm:grid-cols-2">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Callback URL</div>
+          <div class="mt-1 flex gap-2">
+            <input id="whUrl" readonly class="flex-1 px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 mono text-xs"/>
+            <button onclick="copy('whUrl')" class="px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">Copy</button>
+          </div>
+        </div>
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Verify token</div>
+          <div class="mt-1 flex gap-2">
+            <input id="whTok" readonly class="flex-1 px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 mono text-xs"/>
+            <button onclick="copy('whTok')" class="px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">Copy</button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 text-xs text-slate-500" id="whNote"></div>
+      <div class="mt-2 text-xs" id="whLast"></div>
+      <button onclick="loadWebhook()" class="mt-3 px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">Refresh / check again</button>
+    </div>
+
+    <div class="card bg-white p-5 mt-4">
+      <h3 class="font-bold">🎙️ Sinhala voice agent <span id="vBadge" class="ml-2 text-xs font-semibold text-slate-400">checking…</span></h3>
+      <p class="text-sm text-slate-500">The agent listens to Sinhala voice notes, understands them, and answers with a Sinhala voice message.</p>
+      <div class="mt-3 grid gap-3 sm:grid-cols-3 text-sm">
+        <div class="rounded-lg bg-slate-50 p-3">
+          <div class="text-xs uppercase tracking-wide text-slate-400">Listening (speech → text)</div>
+          <div class="font-semibold mt-1" id="vStt">—</div>
+        </div>
+        <div class="rounded-lg bg-slate-50 p-3">
+          <div class="text-xs uppercase tracking-wide text-slate-400">Speaking (text → voice)</div>
+          <div class="font-semibold mt-1" id="vTts">—</div>
+        </div>
+        <div class="rounded-lg bg-slate-50 p-3">
+          <div class="text-xs uppercase tracking-wide text-slate-400">Voice cloning</div>
+          <div class="font-semibold mt-1" id="vClone">—</div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Try it (nothing is sent)</div>
+      <div class="mt-2 flex gap-2 flex-wrap">
+        <input id="vPhone" placeholder="94771234567" class="px-3 py-2 rounded-lg border border-slate-300 w-40"/>
+        <input id="vText" placeholder="visa fee eka kiyada" class="flex-1 min-w-[220px] px-3 py-2 rounded-lg border border-slate-300"/>
+        <button onclick="tryVoice()" class="px-4 py-2 rounded-lg bg-brand text-white font-medium">Understand + speak</button>
+      </div>
+      <div id="vResult" class="mt-3 text-sm"></div>
+
+      <div class="mt-3 text-xs rounded-lg bg-sky-50 border border-sky-100 p-3" id="vStack">checking what to install…</div>
+      <div class="mt-2 text-xs" id="vConsent"></div>
+    </div>
+
+    <div class="card bg-white p-5 mt-4">
+      <h3 class="font-bold">Check the mailbox now</h3>
+      <p class="text-sm text-slate-500">Normally the agent checks by itself every 15 minutes between 9am and 5pm.</p>
+      <button onclick="checkMail()" class="mt-3 px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50">Check e-mail now</button>
+      <span id="mailResult" class="ml-3 text-sm text-slate-500"></span>
+    </div>
+  </section>
+
+  <p class="text-center text-xs text-slate-400 py-6">
+    Trans Arabian (Pvt) Ltd · Romania Visa Section · the agent never sends anything without a person saying yes,
+    except replies to people who messaged us first.
+  </p>
+</main>
+
+<!-- ============================ POPUP ============================ -->
+<div id="modal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-ink/40"></div>
+  <div class="relative mx-auto mt-24 max-w-lg px-4">
+    <div class="card bg-white p-6 pop-in">
+      <div class="flex items-start gap-3">
+        <div class="text-3xl">🔔</div>
+        <div class="flex-1">
+          <div class="text-xs font-semibold uppercase tracking-wide text-brand">The agent needs you</div>
+          <h3 id="mTitle" class="text-xl font-bold text-ink mt-1"></h3>
+          <p id="mBody" class="mt-2 text-slate-600 whitespace-pre-line"></p>
+        </div>
+        <button onclick="dismissModal()" title="Close and stop asking"
+                aria-label="Close"
+                class="-mt-1 -mr-1 w-9 h-9 shrink-0 rounded-lg text-slate-400 hover:text-ink hover:bg-slate-100 text-2xl leading-none flex items-center justify-center">&times;</button>
+      </div>
+      <div id="mExtra" class="mt-4"></div>
+      <div class="mt-6 flex gap-2 justify-end flex-wrap">
+        <button id="mNo" onclick="rejectCurrentBatch()"
+                class="hidden px-4 py-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50">Don't send</button>
+        <button id="mLater" onclick="dismissModal()"
+                class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50">Later</button>
+        <button id="mAction" class="px-5 py-2 rounded-lg bg-brand text-white font-semibold">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="toasts" class="space-y-2"></div>
+
+<script>
+/* ============================== helpers ============================== */
+const G = u => fetch(u).then(r => r.json());
+const P = (u, o) => fetch(u, {method:'POST', headers:{'Content-Type':'application/json'},
+                             body: JSON.stringify(o||{})}).then(r => r.json());
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* The six steps a file goes through.
+   t = short label for the badge,  d = plain-language explanation,
+   n = what has to happen to move to the next step. */
+const STAGE = {
+  watching:        {t:'Waiting for date',  c:'bg-slate-100 text-slate-700',
+    d:'Registered with the embassy. No reply yet.',
+    n:'Nothing to do — wait for the embassy e-mail.'},
+  appointment_seen:{t:'Date received',      c:'bg-sky-100 text-sky-700',
+    d:'The embassy e-mailed the interview date. The applicant does not know it yet.',
+    n:'Approve the list so the applicant is told.'},
+  appointment_sent:{t:'Date sent',          c:'bg-indigo-100 text-indigo-700',
+    d:'We WhatsApped the interview date to the applicant.',
+    n:'Wait for the embassy decision.'},
+  decided_seen:    {t:'Decision received',  c:'bg-amber-100 text-amber-700',
+    d:'The embassy replied with its decision. The applicant does not know yet.',
+    n:'Check the outcome, then tell them when to collect.'},
+  collection_sent: {t:'Collection sent',    c:'bg-emerald-100 text-emerald-700',
+    d:'We WhatsApped the passport collection date to the applicant.',
+    n:'Wait for them to collect it.'},
+  closed:          {t:'Passport collected', c:'bg-slate-800 text-white',
+    d:'The applicant has their passport. This file is finished.',
+    n:'Nothing — done.'}
+};
+const STAGE_ORDER = ['watching','appointment_seen','appointment_sent',
+                     'decided_seen','collection_sent','closed'];
+
+function toast(msg, tone='good'){
+  const el = document.createElement('div');
+  const bg = tone==='bad' ? 'bg-red-600' : tone==='warn' ? 'bg-amber-500' : 'bg-emerald-600';
+  el.className = `pop-in ${bg} text-white px-4 py-2.5 rounded-xl shadow-lg text-sm font-medium max-w-sm`;
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>el.remove(), 6000);
+}
+
+let beepCtx = null;
+function chime(){
+  try{
+    beepCtx = beepCtx || new (window.AudioContext||window.webkitAudioContext)();
+    [660, 880].forEach((f,i)=>{
+      const o = beepCtx.createOscillator(), g = beepCtx.createGain();
+      o.frequency.value = f; o.type='sine';
+      g.gain.setValueAtTime(0.0001, beepCtx.currentTime + i*0.18);
+      g.gain.exponentialRampToValueAtTime(0.25, beepCtx.currentTime + i*0.18 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, beepCtx.currentTime + i*0.18 + 0.30);
+      o.connect(g); g.connect(beepCtx.destination);
+      o.start(beepCtx.currentTime + i*0.18); o.stop(beepCtx.currentTime + i*0.18 + 0.32);
+    });
+  }catch(e){}
+}
+
+function enableDesktopAlerts(){
+  if(!('Notification' in window)){ toast('This browser has no desktop alerts', 'warn'); return; }
+  Notification.requestPermission().then(p => {
+    document.getElementById('bellBtn').textContent = p==='granted' ? '🔔 Desktop alerts on' : '🔔 Turn on desktop alerts';
+    toast(p==='granted' ? 'Desktop alerts are on' : 'Permission not given', p==='granted'?'good':'warn');
+  });
+}
+function desktopNotify(title, body){
+  try{
+    if('Notification' in window && Notification.permission==='granted'){
+      new Notification(title, {body});
+    }
+  }catch(e){}
+}
+
+/* ============================== popup ============================== */
+/* The step strip: one box per stage, with how many files are there and an
+   arrow between them, so the flow reads left to right at a glance. Clicking
+   (or hovering) a step explains it in plain words. */
+function renderSteps(counts){
+  const bar = document.getElementById('stepsBar');
+  if(!bar) return;
+  bar.innerHTML = STAGE_ORDER.map((k, i) => {
+    const s = STAGE[k], n = counts[k] ?? 0;
+    const dim = n ? '' : ' opacity-45';
+    const arrow = i < STAGE_ORDER.length-1
+      ? '<div class="flex items-center text-slate-300 px-0.5">›</div>' : '';
+    return `<button onclick="showStep('${k}')" onmouseenter="showStep('${k}')"
+        title="${esc(s.d)}"
+        class="px-3 py-1.5 rounded-full font-semibold ${s.c}${dim} hover:opacity-100 transition">
+        ${esc(s.t)} <span class="font-bold">${n}</span></button>` + arrow;
+  }).join('');
+}
+
+let pinnedStep = null;
+function showStep(k){
+  const s = STAGE[k], box = document.getElementById('stepsHelp');
+  if(!box) return;
+  box.classList.remove('hidden');
+  box.innerHTML =
+    `<div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+       <div class="font-semibold text-ink">${esc(s.t)}</div>
+       <div class="mt-0.5">${esc(s.d)}</div>
+       <div class="mt-1.5 text-slate-500"><b>Next:</b> ${esc(s.n)}</div>
+     </div>`;
+}
+function hideStep(){
+  const box = document.getElementById('stepsHelp');
+  if(box) box.classList.add('hidden');
+}
+
+let lastAlertId = Number(localStorage.getItem('ta_last_alert') || 0);
+const queue = [];
+let modalOpen = false;
+let currentAlert = null;      // the alert on screen, so it can be dismissed
+let currentBatchId = null;    // set only for approve_batch cards
+
+function popAlert(a){
+  currentAlert = a;
+  currentBatchId = (a.type === 'approve_batch' && a.payload && a.payload.batch_id)
+                   ? a.payload.batch_id : null;
+  document.getElementById('mTitle').textContent = a.title || 'The agent needs you';
+  document.getElementById('mBody').textContent  = a.detail || '';
+  const extra = document.getElementById('mExtra');
+  extra.innerHTML = '';
+  const act = document.getElementById('mAction');
+  const later = document.getElementById('mLater');
+  const no = document.getElementById('mNo');
+  if (later) later.textContent = currentBatchId ? 'Not now' : 'Later';
+  // only an approval needs a "don't send" - everything else just needs an OK
+  if (no) no.classList.toggle('hidden', !currentBatchId);
+
+  if(a.type === 'approve_batch' && a.payload && a.payload.batch_id){
+    act.textContent = 'Yes, send it';
+    act.onclick = async () => { closeModal(); await approveBatch(a.payload.batch_id, a.id); };
+  } else if(a.type === 'unclassified_email'){
+    act.textContent = 'I will look at it';
+    act.onclick = async () => { closeModal(); await ack(a.id); };
+  } else if(String(a.type).startsWith('watch_')){
+    act.textContent = 'Got it';
+    act.onclick = async () => { closeModal(); await ack(a.id); };
+  } else if(a.type === 'unknown_applicant'){
+    extra.innerHTML = `<div class="grid gap-2">
+      <input id="aName" placeholder="Applicant name" class="px-3 py-2 rounded-lg border border-slate-300"/>
+      <input id="aPhone" placeholder="WhatsApp number (94…)" class="px-3 py-2 rounded-lg border border-slate-300 mono"/></div>`;
+    act.textContent = 'Save and continue';
+    act.onclick = async () => {
+      const name = document.getElementById('aName').value.trim();
+      const phone = document.getElementById('aPhone').value.trim();
+      closeModal();
+      await P('/api/tasks/'+a.id+'/resolve', {resolution:{name, whatsapp:phone}, by:'console'});
+      toast('Saved — the agent will carry on');
+      loadAll();
+    };
+  } else {
+    act.textContent = 'OK';
+    act.onclick = async () => { closeModal(); await ack(a.id); };
+  }
+
+  modalOpen = true;
+  document.getElementById('modal').classList.remove('hidden');
+  chime();
+  desktopNotify('The agent needs you', a.title || '');
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.add('hidden');
+  modalOpen = false;
+  currentAlert = null;
+  currentBatchId = null;
+  if(queue.length) setTimeout(()=>popAlert(queue.shift()), 400);
+}
+
+/* Dismissing used to only hide the popup: the alert stayed pending and came
+   straight back on the next poll, so a card you had already dealt with (or
+   never wanted) could not be got rid of. This clears it for good. */
+async function dismissModal(){
+  const a = currentAlert;
+  const wasBatch = currentBatchId;
+  closeModal();
+  if(!a) return;
+  try{
+    await P('/api/tasks/'+a.id+'/resolve',
+            {resolution:{dismissed:'console'}, status:'dismissed', by:'console'});
+  }catch(e){ /* alert-style rows live in another table - try the ack route */
+    try{ await ack(a.id); }catch(_){}
+  }
+  if(!wasBatch) toast('Closed — the agent will stop asking');
+  loadAll();
+}
+
+/* "Don't send" - refuse the batch so nobody can approve it by accident later */
+async function rejectCurrentBatch(){
+  const id = currentBatchId, a = currentAlert;
+  if(!id){ await dismissModal(); return; }
+  closeModal();
+  try{
+    await P('/api/batches/'+id+'/reject', {by:'console', reason:'declined in console'});
+    if(a){ try{ await P('/api/tasks/'+a.id+'/resolve',
+                       {resolution:{dismissed:'console'}, status:'dismissed', by:'console'}); }catch(_){} }
+    toast('Batch declined — nothing was sent', 'warn');
+  }catch(e){ toast('Could not decline: '+e, 'bad'); }
+  loadAll();
+}
+
+async function ack(id){ await P('/api/alerts/'+id+'/ack', {}); loadAll(); }
+
+/* ============================== data ============================== */
+let FILES = [], ALERTS = [], BATCHES = [];
+
+async function loadAll(){
+  try{
+    const [health, stats, alerts, obs, batches] = await Promise.all([
+      G('/api/health'), G('/api/stats'), G('/api/alerts'), G('/api/observation'), G('/api/batches?limit=20')
+    ]);
+    FILES = (obs.recent||[]); ALERTS = (alerts.alerts||[]); BATCHES = batches;
+
+    document.getElementById('subline').textContent =
+      `Mailbox ${esc(health.imap||'—')} · ${health.working_window ? 'watching the mailbox' : 'outside office hours (9am–5pm)'} · next check in ${Math.round((health.next_poll_in_seconds||0)/60)} min`;
+
+    const pill = document.getElementById('statusPill');
+    const need = ALERTS.length;
+    if(need > 0){
+      pill.className = 'px-3 py-1.5 rounded-full text-sm font-semibold bg-amber-100 text-amber-800 blink';
+      pill.textContent = `⚠️ Waiting for you (${need})`;
+    } else if(health.working_window){
+      pill.className = 'px-3 py-1.5 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-700';
+      pill.textContent = '● Working by itself';
+    } else {
+      pill.className = 'px-3 py-1.5 rounded-full text-sm font-semibold bg-slate-200 text-slate-600';
+      pill.textContent = '○ Resting (office closed)';
+    }
+
+    document.getElementById('nWatch').textContent = (obs.counts||{}).total ?? 0;
+    renderSteps(obs.counts||{});
+    const day = stats.day ? JSON.parse(stats.day.stats_json||'{}') : {};
+    document.getElementById('nSent').textContent = day.sent ?? 0;
+    document.getElementById('nMail').textContent = day.email_appointment ?? 0;
+    (day.email_decision||0) && (document.getElementById('nMail').textContent =
+      Number(document.getElementById('nMail').textContent) + Number(day.email_decision));
+
+    document.getElementById('nHelp').textContent = need;
+    const hc = document.getElementById('helpCard');
+    document.getElementById('nHelp').className = 'text-3xl font-bold ' + (need ? 'text-amber-600' : 'text-good');
+    hc.className = 'card p-5 ' + (need ? 'bg-amber-50 ring-2 ring-amber-300' : 'bg-white');
+
+    renderAlerts(); renderBatches(); renderFiles(); renderConnections(health);
+
+    // pop up anything the human has not seen yet
+    const fresh = ALERTS.filter(a => a.id > lastAlertId);
+    if(fresh.length){
+      const max = Math.max(...ALERTS.map(a=>a.id), 0);
+      localStorage.setItem('ta_last_alert', String(max));
+      lastAlertId = max;
+      if(fresh.length === 1){
+        if(modalOpen) queue.push(fresh[0]); else popAlert(fresh[0]);
+      } else if(fresh.length > 1){
+        // do not machine-gun the human with popups: ring once, list the rest
+        chime();
+        desktopNotify('The agent needs you', fresh.length + ' things are waiting');
+        toast(fresh.length + ' things need a person — see the list below', 'warn');
+      }
+    }
+  }catch(e){
+    console.error(e); toast('Could not reach the agent', 'bad');
+  }
+}
+
+function renderAlerts(){
+  const box = document.getElementById('alerts');
+  if(!ALERTS.length){
+    box.innerHTML = `<div class="card bg-emerald-50 border border-emerald-200 p-5 text-emerald-800">
+      <b>Nothing needs you. 🎉</b> The agent is handling everything by itself right now.</div>`;
+    return;
+  }
+  box.innerHTML = ALERTS.map(a => {
+    const isBatch = a.type==='approve_batch' && a.payload && a.payload.batch_id;
+    return `<div class="card bg-white p-5">
+      <div class="flex items-start gap-3 flex-wrap">
+        <div class="text-2xl">${isBatch ? '📤' : '❓'}</div>
+        <div class="flex-1 min-w-[240px]">
+          <div class="font-bold text-ink">${esc(a.title)}</div>
+          <div class="text-sm text-slate-600 whitespace-pre-line mt-1">${esc(String(a.detail||'').slice(0,400))}</div>
+          <div class="text-xs text-slate-400 mt-2">${esc(a.type)} · ${esc(String(a.created_at||'').slice(0,16).replace('T',' '))}</div>
+        </div>
+        <div class="flex gap-2">
+          ${isBatch ? `<button onclick="approveBatch('${esc(a.payload.batch_id)}', ${a.id})"
+             class="px-4 py-2 rounded-lg bg-good text-white font-semibold">Send it</button>` : ''}
+          ${isBatch ? `<button onclick="openBatch('${esc(a.payload.batch_id)}')"
+             class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50">Let me read it</button>` : ''}
+          <button onclick="ack(${a.id})" class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50">Not now</button>
+        </div>
+      </div></div>`;
+  }).join('');
+}
+
+async function approveBatch(id, alertId){
+  toast('Sending with human pacing…');
+  const r = await P('/api/batches/'+id+'/approve', {by:'console'});
+  toast(r.started ? 'Started — sending slowly in the background' : 'Done');
+  if(alertId) await ack(alertId); else loadAll();
+}
+
+async function openBatch(id){
+  const b = await G('/api/batches/'+id);
+  const texts = (b.payload && b.payload.group_messages || []).map(g=>g.text).join('\n\n');
+  const n = (b.payload && b.payload.client_messages || []).length;
+  // opened from the list, not from an alert - but it still needs a way out
+  currentAlert = null;
+  currentBatchId = id;
+  document.getElementById('mLater').textContent = 'Not now';
+  document.getElementById('mNo').classList.remove('hidden');
+  document.getElementById('mTitle').textContent = 'Check this before it goes out';
+  document.getElementById('mBody').innerHTML =
+    `<div class="mono text-xs whitespace-pre-wrap bg-slate-50 p-3 rounded-lg border border-slate-200">${esc(texts)}</div>
+     <div class="mt-3 text-sm text-slate-600">Plus <b>${n}</b> personal message(s) to each applicant.</div>`;
+  document.getElementById('mExtra').innerHTML = '';
+  const act = document.getElementById('mAction');
+  act.textContent = 'Yes, send it';
+  act.onclick = async () => { closeModal(); await approveBatch(id, 0); };
+  modalOpen = true; document.getElementById('modal').classList.remove('hidden');
+}
+
+function renderBatches(){
+  const box = document.getElementById('batches');
+  const rows = BATCHES.filter(b => b.status==='awaiting_approval' || b.status==='open' || b.status==='sent');
+  if(!rows.length){ box.innerHTML = `<div class="card bg-white p-5 text-slate-500">Nothing ready yet. When the embassy sends confirmations, they appear here.</div>`; return; }
+  box.innerHTML = rows.map(b => {
+    const badge = b.status==='awaiting_approval' ? '<span class="px-2 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">waiting for you</span>'
+      : b.status==='sent' ? '<span class="px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">sent</span>'
+      : '<span class="px-2 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">collecting (3 min)</span>';
+    const nice = b.kind==='appointment' ? 'Interview appointment list' : 'Passport collection list';
+    return `<div class="card bg-white p-5">
+      <div class="flex items-start gap-3 flex-wrap">
+        <div class="text-2xl">${b.kind==='appointment' ? '🗓️' : '🛂'}</div>
+        <div class="flex-1">
+          <div class="font-bold text-ink">${nice} — ${b.item_count||0} applicant(s) ${badge}</div>
+          <div class="text-xs text-slate-400 mono mt-1">${esc(b.id)}</div>
+        </div>
+        <div class="flex gap-2">
+          ${b.status==='awaiting_approval' ? `
+            <button onclick="openBatch('${esc(b.id)}')" class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50">Read it first</button>
+            <button onclick="approveBatch('${esc(b.id)}',0)" class="px-4 py-2 rounded-lg bg-good text-white font-semibold">Send it</button>` : ''}
+          ${b.status==='open' ? `<span class="text-sm text-slate-500">Collecting more e-mails for 3 minutes…</span>` : ''}
+          ${b.status==='sent' ? `<span class="text-sm text-slate-500">Sent ${esc(String(b.sent_at||'').slice(0,16).replace('T',' '))}</span>` : ''}
+        </div>
+      </div></div>`;
+  }).join('');
+}
+
+function renderFiles(){
+  const q = (document.getElementById('search').value||'').toLowerCase();
+  const rows = FILES.filter(f => !q || (String(f.name)+String(f.e_number)+String(f.se_number)).toLowerCase().includes(q));
+  document.getElementById('filesBody').innerHTML = rows.length ? rows.slice(0,150).map(f => {
+    const st = STAGE[f.stage] || {t:f.stage, c:'bg-slate-100'};
+    const date = f.stage==='appointment_seen'||f.stage==='appointment_sent' ? (f.appointment_date||'') + ' ' + (f.appointment_time||'')
+               : (f.stage==='decided_seen'||f.stage==='collection_sent'||f.stage==='closed') ? (f.collection_date||'') : '—';
+    return `<tr class="border-t border-slate-100 hover:bg-slate-50">
+      <td class="p-3"><div class="font-medium">${esc(f.name || '(name not known yet)')}</div>
+        <div class="text-xs text-slate-400 mono">${esc(f.e_number)}${f.se_number?' · '+esc(f.se_number):''}</div></td>
+      <td class="p-3"><span class="px-2 py-1 rounded-full text-xs font-semibold ${st.c}">${st.t}</span></td>
+      <td class="p-3 mono text-xs">${esc(date)}</td>
+      <td class="p-3 mono text-xs">${f.whatsapp ? esc(f.whatsapp) : '<span class="text-amber-600">missing</span>'}</td>
+      <td class="p-3"><button onclick="timeline('${esc(f.e_number)}')" class="text-brand text-xs font-semibold hover:underline">history</button></td>
+    </tr>`;
+  }).join('') : `<tr><td class="p-4 text-slate-400" colspan="5">No files yet.</td></tr>`;
+}
+
+async function timeline(e){
+  const t = await G('/api/observation/timeline?e='+encodeURIComponent(e));
+  const lines = (t.observations||[]).map(o =>
+    `<div class="flex gap-2 text-sm"><span class="mono text-xs text-slate-400 w-32">${esc(String(o.seen_at).slice(0,16).replace('T',' '))}</span>
+      <span>${o.kind==='appointment'?'🗓️ interview date':'🛂 decision'} ${o.duplicate?'<i>(duplicate – ignored)</i>':''}
+      ${o.from_stage && o.to_stage && o.from_stage!==o.to_stage ? `<span class="text-xs text-slate-400">${esc(o.from_stage)} → ${esc(o.to_stage)}</span>`:''}</span></div>`).join('') || '<div class="text-sm text-slate-400">No embassy mail seen yet.</div>';
+  document.getElementById('mTitle').textContent = (t.file&&t.file.name) || e;
+  document.getElementById('mBody').innerHTML =
+    `<div class="mono text-xs text-slate-500">${esc(e)}</div><div class="mt-3 space-y-1">${lines}</div>`;
+  document.getElementById('mExtra').innerHTML = '';
+  const act = document.getElementById('mAction');
+  act.textContent = 'Close';
+  act.onclick = () => closeModal();
+  modalOpen = true; document.getElementById('modal').classList.remove('hidden');
+}
+
+function copy(id){
+  const el = document.getElementById(id);
+  el.select(); el.setSelectionRange(0, 99999);
+  try { navigator.clipboard.writeText(el.value); } catch(e) { document.execCommand('copy'); }
+  toast('Copied');
+}
+
+async function loadWebhook(){
+  try{
+    const c = await G('/api/webhook/config');
+    document.getElementById('whUrl').value = c.callback_url;
+    document.getElementById('whTok').value = c.verify_token;
+    const note = document.getElementById('whNote');
+    note.textContent = (c.token_valid ? 'WhatsApp token is valid. '
+      : '⚠️ The WhatsApp token is not valid yet — Meta will still save the webhook, but nothing can be sent until it is fixed. ') + (c.note || '');
+    note.className = 'mt-3 text-xs ' + (c.reachable ? 'text-emerald-700' : 'text-red-600 font-semibold');
+    try{
+      const a = await G('/api/webhook/attempts?limit=5');
+      const el = document.getElementById('whLast');
+      if(!a.count){
+        el.textContent = 'No verification call has arrived yet — Meta has not reached this server.';
+        el.className = 'mt-2 text-xs text-amber-700 font-semibold';
+      } else {
+        const last = a.attempts[0];
+        el.innerHTML = 'Last call from Meta: ' + esc(String(last.at).slice(0,19).replace('T',' ')) +
+          ' · ' + (last.ok ? '<b class="text-emerald-700">token accepted</b>'
+                           : '<b class="text-red-600">token rejected</b> (got ' + last.token_len_got +
+                             ' chars, expected ' + a.verify_token_len + ')');
+        el.className = 'mt-2 text-xs text-slate-500';
+      }
+    }catch(e){}
+    const badge = document.getElementById('whBadge');
+    if(badge){
+      badge.textContent = c.reachable ? '● reachable by Meta' : '● NOT reachable — verify will fail';
+      badge.className = 'ml-2 text-xs font-semibold ' + (c.reachable ? 'text-emerald-600' : 'text-red-600');
+    }
+  }catch(e){}
+}
+
+function renderConnections(h){
+  const t = (h && h.cloud_api) || false;
+  const cards = [
+    {n:'Office mailbox (Gmail)', ok: !!h.imap, how:'Set IMAP_USER / IMAP_PASSWORD in .env', d:'The agent reads MAE@evisa.ro mail here.'},
+    {n:'WhatsApp official (Cloud API)', ok: !!h.cloud_api, how:'Put a fresh WHATSAPP_TOKEN in .env', d:'The safest way to message applicants.'},
+    {n:'Romania group', ok: !!h.group, how:'Set ROMANIA_GROUP_JID', d:'Where the daily lists are posted.'},
+  ];
+  document.getElementById('conn').innerHTML = cards.map(c => `
+    <div class="card p-5 ${c.ok?'bg-white':'bg-amber-50 ring-2 ring-amber-200'}">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">${c.ok?'✅':'⚠️'}</span>
+        <div class="font-bold text-ink">${esc(c.n)}</div>
+      </div>
+      <p class="text-sm text-slate-600 mt-2">${esc(c.d)}</p>
+      ${c.ok?'':`<p class="text-xs text-amber-700 mt-2 mono">${esc(c.how)}</p>`}
+    </div>`).join('');
+}
+
+/* ============================== safety ============================== */
+async function loadSafety(){
+  const [c, r, cov] = await Promise.all([G('/api/stealth/checklist'), G('/api/risk'), G('/api/detection/coverage')]);
+  const s = c.summary, pct = Math.round(100*s.pass/Math.max(1,s.total));
+  const col = c.grade==='healthy' ? 'text-good' : c.grade==='caution' ? 'text-warn' : 'text-bad';
+  document.getElementById('grade').className = 'text-2xl font-bold ' + col;
+  document.getElementById('grade').textContent =
+    c.grade==='healthy' ? 'All good ✅' : c.grade==='caution' ? 'Careful ⚠️' : 'Stopped 🛑';
+  const bar = document.getElementById('gradeBar');
+  bar.style.width = pct+'%';
+  bar.className = 'h-full ' + (c.grade==='healthy'?'bg-good':c.grade==='caution'?'bg-warn':'bg-bad');
+  document.getElementById('gradeText').textContent =
+    `${s.pass} of ${s.total} checks pass · ${s.warn} need care · ${s.fail} failed`;
+  const a = r.assessment||{}, pc = r.pacing||{};
+  const risk = Math.round((a.risk||0)*100);
+  document.getElementById('riskPct').textContent = risk+'%';
+  document.getElementById('speed').textContent = Math.round(100/(pc.multiplier||1))+'%';
+  // Ban risk is the one number where "the bar is full" is BAD, so it gets its
+  // own bar and a plain word. It used to share the checks-passing bar, which
+  // read as a full red gauge at 5% risk and terrified people for no reason.
+  const rBar = document.getElementById('riskBar');
+  rBar.style.width = Math.min(100, risk)+'%';
+  rBar.className = 'h-full ' + (risk < 20 ? 'bg-good' : risk < 50 ? 'bg-warn' : 'bg-bad');
+  document.getElementById('riskWord').textContent =
+    risk < 20 ? '(low — fine)' : risk < 50 ? '(moderate)' : '(high — slow down)';
+  document.getElementById('riskWord').className =
+    'font-semibold ' + (risk < 20 ? 'text-good' : risk < 50 ? 'text-warn' : 'text-bad');
+
+  document.getElementById('controls').innerHTML = c.items.map(i => {
+    const dot = i.status==='pass' ? 'bg-good' : i.status==='warn' ? 'bg-warn' : 'bg-bad';
+    return `<div class="flex items-start gap-3 py-1.5 border-t border-slate-100">
+      <span class="mt-1.5 h-2.5 w-2.5 rounded-full ${dot}"></span>
+      <div class="flex-1">
+        <div class="text-sm">${esc(i.vector)}</div>
+        <div class="text-xs text-slate-400">${esc(i.control)}</div>
+      </div>
+      <div class="text-xs mono text-slate-500 text-right max-w-[34%]">${esc(String(i.value))}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('coverage').innerHTML = cov.stages.map(s => `
+    <div class="rounded-lg border border-slate-200 p-3">
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="font-semibold text-sm">${esc(s.stage)}</div>
+        <span class="px-2 py-0.5 rounded-full text-xs ${String(s.coverage).startsWith('full')?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">${esc(s.coverage)}</span>
+      </div>
+      <div class="text-xs text-slate-500 mt-1">WhatsApp sees: ${esc(s.what_meta_sees)}</div>
+      <div class="text-xs text-slate-700 mt-1"><b>We do:</b> ${esc(s.our_answer)}</div>
+    </div>`).join('') +
+    `<div class="rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs text-slate-600">
+      <b>Honest limit:</b> ${esc(cov.honest_limit)}</div>`;
+}
+
+/* ============================== actions ============================== */
+async function haltAgent(){ const r = await P('/api/risk/halt', {reason:'console stop'}); toast('Stopped. Nothing will be sent.', 'warn'); loadAll(); }
+async function resumeAgent(){ await P('/api/risk/resume', {by:'console'}); toast('Started again'); loadAll(); }
+async function scanNow(){
+  const r = await P('/api/observation/scan', {});
+  const n = (r.issues||[]).length;
+  toast(n ? n+' file(s) need a person' : 'Nothing stuck — every file is moving', n?'warn':'good');
+  loadAll();
+}
+function openWatch(){ document.getElementById('watchForm').classList.toggle('hidden'); }
+async function addWatch(){
+  const e = document.getElementById('wE').value.trim();
+  if(!e){ toast('An E-number is needed', 'warn'); return; }
+  await P('/api/observation/watch', {e_number:e, name:document.getElementById('wName').value.trim(),
+    se_number:document.getElementById('wSe').value.trim()});
+  document.getElementById('wE').value = document.getElementById('wName').value = document.getElementById('wSe').value = '';
+  toast('Now watching '+e); loadAll();
+}
+async function loadVoice(){
+  try{
+    const v = await G('/api/voice/status');
+    const badge = document.getElementById('vBadge');
+    // "enabled" only means the feature is switched on in config. It said
+    // "● on" even with no speech engine installed at all, so it looked like
+    // Sinhala voice notes were being understood when nothing was listening.
+    // Only claim it works when a real engine is actually reachable.
+    const sttReal = v.stt.provider && v.stt.provider !== 'stub';
+    const ttsReal = v.tts.provider && v.tts.provider !== 'stub';
+    const live = sttReal && ttsReal;
+    badge.textContent = live ? '● on' : v.enabled ? '○ switched on — not installed yet' : '○ off';
+    badge.className = 'ml-2 text-xs font-semibold ' +
+      (live ? 'text-emerald-600' : 'text-amber-600');
+    document.getElementById('vStt').textContent  = v.stt.provider + (v.stt.available.ffmpeg ? '' : ' (install ffmpeg)');
+    document.getElementById('vTts').textContent  = v.tts.provider;
+    const cl = v.tts.consent;
+    document.getElementById('vClone').innerHTML = cl.cloning_allowed
+      ? '<span class="text-emerald-700">on — ' + esc(cl.owner || '') + '</span>'
+      : '<span class="text-amber-700">off — needs the voice owner\'s consent</span>';
+    document.getElementById('vConsent').textContent = 'Consent: ' + cl.reason;
+    try{
+      const st = await G('/api/voice/stack');
+      const names = {onnx_sinhala:'Sinhala CTC (ONNX)', whisper_ct2:'Sinhala Whisper',
+                     local_whisper:'Whisper', speaches:'local speech server',
+                     piper:'Piper Sinhala voice', coqui_vits:'SinhalaVITS',
+                     espeak:'espeak-ng', zipvoice:'voice cloning', stub:'none yet'};
+      const nm = p => names[p] || p;
+      document.getElementById('vStack').innerHTML =
+        '<b>Listening:</b> ' + esc(nm(st.stt.use))
+        + (st.stt.fallback_order.length > 2 ? ' &middot; backup: ' + esc(nm(st.stt.fallback_order[1])) : '')
+        + ' &nbsp;·&nbsp; <b>Speaking:</b> ' + esc(nm(st.tts.use))
+        + (st.tts.advice ? '<br>' + esc(st.tts.advice) : '');
+    }catch(e){}
+  }catch(e){
+    document.getElementById('vBadge').textContent = '○ voice layer unavailable';
+  }
+}
+
+async function tryVoice(){
+  const phone = document.getElementById('vPhone').value.trim() || '0000000000';
+  const text  = document.getElementById('vText').value.trim();
+  if(!text){ toast('Type something in Sinhala or Singlish first', 'warn'); return; }
+  document.getElementById('vResult').textContent = 'Thinking…';
+  const r = await P('/api/voice/reply', {phone, text, dry_run:true});
+  document.getElementById('vResult').innerHTML =
+    '<div class="rounded-lg bg-slate-50 border border-slate-200 p-3">'
+    + '<div class="text-xs text-slate-400">understood as</div>'
+    + '<div class="font-semibold">' + esc(r.intent) + ' <span class="text-slate-400 font-normal">'
+    + (r.confidence*100).toFixed(0) + '% · ' + esc(r.emotion) + ' voice</span></div>'
+    + '<div class="mt-2">' + esc(r.reply_text) + '</div>'
+    + '<div class="text-xs mt-2 ' + (r.tts.ok ? 'text-slate-400' : 'text-amber-700') + '">'
+    + esc(r.tts.provider) + (r.tts.error ? ' — ' + esc(r.tts.error) : ' — audio ready')
+    + ' · harness ' + (r.harness_ok ? 'passed' : 'blocked') + '</div></div>';
+}
+
+async function checkMail(){
+  document.getElementById('mailResult').textContent = 'Checking…';
+  const r = await P('/api/email/check', {});
+  document.getElementById('mailResult').textContent =
+    r.ok ? `Read ${r.fetched||0} e-mail(s), ${r.new||0} new.` : ('Problem: '+(r.error||'see the logs'));
+  loadAll();
+}
+async function importContacts(){
+  const text = document.getElementById('ctext').value.trim();
+  if(!text){ toast('Paste some contacts first', 'warn'); return; }
+  const r = await P('/api/contacts/import', {text, auto_link:true});
+  document.getElementById('csummary').textContent =
+    `${r.contacts||0} contacts · ${r.matched||0} matched · ${r.suggested||0} to check · ${r.unmatched||0} unknown`;
+  toast('Imported'); loadAll();
+}
+async function uploadContacts(){
+  const f = document.getElementById('cfile').files[0];
+  if(!f){ toast('Choose a file first', 'warn'); return; }
+  const fd = new FormData(); fd.append('file', f);
+  const r = await fetch('/api/contacts/upload', {method:'POST', body:fd}).then(x=>x.json());
+  document.getElementById('csummary').textContent = JSON.stringify(r).slice(0,160);
+  loadAll();
+}
+
+/* ============================== boot ============================== */
+loadAll(); loadSafety(); loadWebhook(); loadVoice();
+setInterval(loadAll, 20000);
+setInterval(loadSafety, 120000);
+document.getElementById('modal').addEventListener('click', e => { if(e.target.id==='modal') closeModal(); });
+</script>
+</body>
+</html>
