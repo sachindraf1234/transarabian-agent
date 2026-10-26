@@ -1,0 +1,27 @@
+"""
+test_client.py - Quick test without needing webhook
+"""
+from whatsapp_client import client
+from human_behavior import human
+
+# Test 1: Human typing delay calculation
+print("=== Human Behavior Test ===")
+tests = [
+    "Hi",
+    "Hey! Sure, let me send that over 😊",
+    "Hi there! Thanks for reaching out. We have your order ready. It will be shipped today evening and you'll get tracking by tomorrow morning. Let me know if you need anything else 😊"
+]
+for t in tests:
+    delay = human.typing_delay(t)
+    bubbles = human.split_long_message(t)
+    print(f"Text: {t[:50]}... len={len(t)} -> typing {delay}s, bubbles={len(bubbles)}")
+
+print("\n=== Send Tests (will actually send if .env set) ===")
+# Uncomment to test real send (use your own number)
+# client.send_text("94771234567", "Hey! This is a test of human-like multi-bubble messaging. This long message should be split into 2-3 bubbles automatically with realistic typing delays between them, just like a real human would send it on WhatsApp 😊", human_like=True)
+
+# Test document
+# client.send_document("94771234567", "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", "dummy.pdf", "Here's your document 📄")
+
+print("\n✅ Test complete. Check logs above.")
+print("To actually send, uncomment lines and set .env")

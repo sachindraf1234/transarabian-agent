@@ -1,0 +1,253 @@
+"""
+bulk_sender.py - COMPLIANT Bulk Sender CLI
+Meta Policy Compliant:
+- Single within 24h: free text allowed
+- Bulk/business-initiated: MUST use pre-approved templates only
+- Doc bulk: MUST use Media Message Template with document header
+- Opt-in mandatory for bulk
+- STOP button required
+
+Usage:
+  python bulk_sender.py template_text          # COMPLIANT bulk text via template
+  python bulk_sender.py template_doc           # COMPLIANT bulk docs via media template
+  python bulk_sender.py template_multi         # COMPLIANT personalized docs via template
+  python bulk_sender.py text --force-24h       # Only for numbers within 24h window (user-initiated)
+  
+Add --dry-run to preview without sending.
+"""
+import sys
+import os
+import pandas as pd
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from whatsapp_client import client
+from database import init_db, is_opted_in, is_in_24h_window
+from config import TEMPLATES
+
+def load_numbers(csv_path: str = "contacts.csv") -> list:
+    if not os.path.exists(csv_path):
+        print(f"❌ {csv_path} not found. Create it with 'phone' column")
+        print("Example:\nphone\n919876543210\n919812345678")
+        sys.exit(1)
+    df = pd.read_csv(csv_path)
+    if "phone" not in df.columns:
+        raise SystemExit("contacts.csv must have a 'phone' column")
+    return [str(p).strip() for p in df["phone"].dropna() if str(p).strip()]
+
+def load_numbers_with_vars(csv_path: str = "contacts.csv") -> tuple:
+    """Load numbers with optional variable columns for template {{1}}, {{2}}"""
+    df = pd.read_csv(csv_path)
+    if "phone" not in df.columns:
+        raise SystemExit("contacts.csv must have 'phone' column")
+    numbers = [str(p).strip() for p in df["phone"].dropna()]
+    # Collect variable columns (all except phone)
+    var_cols = [c for c in df.columns if c != "phone"]
+    variable_sets = []
+    if var_cols:
+        for _, row in df.iterrows():
+            vars_for_row = [str(row[c]) if pd.notna(row[c]) else "" for c in var_cols]
+            variable_sets.append(vars_for_row)
+        print(f"Found variable columns for template: {var_cols}")
+    else:
+        variable_sets = []
+    return numbers, variable_sets, var_cols
+
+def load_document_rows(csv_path: str = "documents.csv") -> list:
+    if not os.path.exists(csv_path):
+        print(f"❌ {csv_path} not found. Example:")
+        print("phone,doc_link,filename,caption,variables")
+        print("919876543210,https://yoursite.com/files/price.pdf,price.pdf,Here's price list,John")
+        sys.exit(1)
+    df = pd.read_csv(csv_path)
+    required = {"phone", "doc_link", "filename"}
+    missing = required - set(df.columns)
+    if missing:
+        raise SystemExit(f"documents.csv missing columns: {missing}")
+    if "caption" not in df.columns:
+        df["caption"] = ""
+    if "variables" not in df.columns:
+        # Check for variable columns
+        pass
+    return df.to_dict(orient="records")
+
+if __name__ == "__main__":
+    init_db()
+    
+    dry_run = "--dry-run" in sys.argv
+    force_24h = "--force-24h" in sys.argv
+    mode = next((a for a in sys.argv[1:] if not a.startswith("--")), "template_text")
+
+    print("🤖 WhatsApp COMPLIANT Bulk Sender")
+    print(f"Mode: {mode} | Dry run: {dry_run} | Force 24h: {force_24h}\n")
+    print("Meta Policy: Bulk must use templates, opt-in required, STOP button, HTTPS docs\n")
+
+    if mode == "template_text":
+        numbers, variable_sets, var_cols = load_numbers_with_vars()
+        print(f"Loaded {len(numbers)} contacts from contacts.csv")
+        print(f"Template: {TEMPLATES['bulk_text_with_optout']['name']} (must be approved in Meta dashboard)")
+        if var_cols:
+            print(f"Variables will map to {{{{1}}}}, {{{{2}}}}, etc: {var_cols}")
+        
+        # Opt-in check
+        opted_in = [n for n in numbers if is_opted_in(n)]
+        not_opted = [n for n in numbers if not is_opted_in(n)]
+        print(f"Opted-in: {len(opted_in)}/{len(numbers)}")
+        if not_opted:
+            print(f"⚠️ {len(not_opted)} numbers without opt-in will be skipped per Meta policy:")
+            for n in not_opted[:5]:
+                print(f"  {n}")
+            if len(not_opted) > 5:
+                print(f"  ... and {len(not_opted)-5} more")
+        
+        if dry_run:
+            print(f"\nDRY RUN — would send template to {len(opted_in)} opted-in people")
+            for i, n in enumerate(opted_in[:10]):
+                vars_preview = variable_sets[i] if variable_sets and i < len(variable_sets) else []
+                print(f"  {n} vars={vars_preview}")
+            sys.exit(0)
+        
+        template_name = input(f"Template name [{TEMPLATES['bulk_text_with_optout']['name']}]: ").strip() or TEMPLATES['bulk_text_with_optout']['name']
+        
+        confirm = input(f"\n⚠️ Send COMPLIANT template '{template_name}' to {len(opted_in)} opted-in people? (y/N): ")
+        if confirm.lower() != 'y':
+            print("Cancelled")
+            sys.exit(0)
+        
+        results = client.bulk_send_template(opted_in, template_name, "en_US", variable_sets, dry_run=False)
+
+    elif mode == "template_doc":
+        numbers, variable_sets, var_cols = load_numbers_with_vars()
+        print(f"Loaded {len(numbers)} contacts")
+        
+        link = input("Public HTTPS document link (must be https://): ").strip()
+        fname = input("Filename (e.g. catalog.pdf): ").strip()
+        if not link.startswith("https://"):
+            raise SystemExit("❌ Document link must be public HTTPS per Meta policy")
+        
+        template_name = input(f"Media template name [{TEMPLATES['bulk_document']['name']}]: ").strip() or TEMPLATES['bulk_document']['name']
+        print(f"Template: {template_name} (must have header type DOCUMENT in Meta dashboard)")
+        
+        opted_in = [n for n in numbers if is_opted_in(n)]
+        print(f"Opted-in: {len(opted_in)}/{len(numbers)}")
+        
+        if dry_run:
+            print(f"\nDRY RUN — would send doc {fname} via template {template_name} to {len(opted_in)} people")
+            sys.exit(0)
+        
+        confirm = input(f"\n⚠️ Send doc {fname} via template to {len(opted_in)} opted-in people? (y/N): ")
+        if confirm.lower() != 'y':
+            print("Cancelled")
+            sys.exit(0)
+        
+        rows = []
+        for i, num in enumerate(opted_in):
+            vars_for_this = variable_sets[i] if variable_sets and i < len(variable_sets) else []
+            rows.append({
+                "phone": num,
+                "doc_link": link,
+                "filename": fname,
+                "variables": vars_for_this
+            })
+        
+        results = client.bulk_send_template_documents(rows, template_name, "en_US", dry_run=False)
+
+    elif mode == "template_multi":
+        rows = load_document_rows()
+        print(f"Loaded {len(rows)} document sends for {len(set(r['phone'] for r in rows))} people")
+        print(f"Template: {TEMPLATES['bulk_document']['name']} (Media template with document header)")
+        
+        # Validate HTTPS
+        for r in rows:
+            if not r['doc_link'].startswith("https://"):
+                raise SystemExit(f"❌ Invalid link (must be HTTPS): {r['doc_link']}")
+        
+        # Check opt-in
+        phones = list(set(str(r['phone']).strip() for r in rows))
+        opted_in_phones = [p for p in phones if is_opted_in(p)]
+        print(f"Opted-in phones: {len(opted_in_phones)}/{len(phones)}")
+        
+        for r in rows[:10]:
+            print(f"  {r['phone']} ← {r['filename']} link={r['doc_link'][:50]}...")
+        
+        if dry_run:
+            print("\nDRY RUN — nothing sent.")
+            sys.exit(0)
+        
+        template_name = input(f"Media template name [{TEMPLATES['bulk_document']['name']}]: ").strip() or TEMPLATES['bulk_document']['name']
+        
+        confirm = input(f"\n⚠️ Send {len(rows)} personalized docs via template '{template_name}'? (y/N): ")
+        if confirm.lower() != 'y':
+            print("Cancelled")
+            sys.exit(0)
+        
+        # Filter to opted-in only
+        filtered_rows = [r for r in rows if is_opted_in(str(r['phone']).strip())]
+        print(f"Sending to {len(filtered_rows)} rows (opted-in only)")
+        
+        results = client.bulk_send_template_documents(filtered_rows, template_name, "en_US", dry_run=False)
+
+    elif mode == "text":
+        if not force_24h:
+            print("❌ NON-COMPLIANT: Free text bulk outside 24h window violates Meta policy!")
+            print("   Use 'template_text' mode for bulk - it uses pre-approved templates with opt-in")
+            print("   If you are SURE all numbers are within 24h window (user messaged you recently),")
+            print("   use --force-24h flag")
+            print("\nExample compliant:")
+            print("  python bulk_sender.py template_text")
+            sys.exit(1)
+        
+        numbers = load_numbers()
+        # Check 24h window
+        in_window = [n for n in numbers if is_in_24h_window(n)]
+        outside = [n for n in numbers if not is_in_24h_window(n)]
+        print(f"24h window: {len(in_window)}/{len(numbers)} inside, {len(outside)} outside")
+        if outside:
+            print("Outside window (will be blocked):")
+            for n in outside[:10]:
+                print(f"  {n}")
+        
+        if dry_run:
+            print(f"DRY RUN - would send free text to {len(in_window)} within 24h")
+            sys.exit(0)
+        
+        message = input("Message to send (only to 24h window): ").strip()
+        if not message:
+            raise SystemExit("Message empty")
+        
+        confirm = input(f"Send free text to {len(in_window)} within 24h? (y/N): ")
+        if confirm.lower() != 'y':
+            sys.exit(0)
+        
+        results = client.bulk_send(in_window, message, dry_run=False)
+
+    else:
+        print("Usage:")
+        print("  COMPLIANT (recommended):")
+        print("    python bulk_sender.py template_text --dry-run   # bulk text via template + opt-in")
+        print("    python bulk_sender.py template_doc              # bulk same doc via media template")
+        print("    python bulk_sender.py template_multi            # bulk different docs via media template")
+        print("  LEGACY (only within 24h window):")
+        print("    python bulk_sender.py text --force-24h --dry-run")
+        raise SystemExit(1)
+
+    ok = sum(1 for r in results if r["status"] == "sent")
+    failed = sum(1 for r in results if r["status"] == "failed")
+    skipped = sum(1 for r in results if "skipped" in r["status"] or "blocked" in r["status"])
+
+    print(f"\n{'='*60}")
+    print(f"✅ Sent {ok} | ❌ Failed {failed} | ⏭️ Skipped/Blocked {skipped} | Total {len(results)}")
+    print(f"{'='*60}\n")
+
+    for r in results:
+        if r["status"] not in ["sent", "dry_run"]:
+            print(f"  {r['status']} {r['to']}: {r.get('error','')} {r.get('doc','')}")
+
+    print("\n💡 COMPLIANCE REMINDERS:")
+    print("- Bulk = template only (text template with STOP button, doc template with document header)")
+    print("- Opt-in mandatory for bulk - get via web form, checkbox, or prior chat")
+    print("- 24h window: free text only allowed within 24h of user inbound")
+    print("- Docs must be public HTTPS (S3, yoursite.com)")
+    print("- Rate limit: 2-5s min + human gaps 18-45s (already implemented)")
+    print("- Human handoff: AI outputs [TRIGGER_HUMAN_HANDOFF] when frustrated -> pause AI, route to dashboard")

@@ -1,0 +1,213 @@
+"""
+thinking_engine.py - Advanced Auto-Thinking & Reply Engine
+How the agent thinks automatically according to customer messages
+"""
+from typing import Dict, List, Tuple
+import re
+import random
+from datetime import datetime
+
+# === 1. INTENT CLASSIFICATION (How agent understands what customer wants) ===
+INTENTS = {
+    "greeting": ["hi", "hello", "hey", "good morning", "good evening", "hlo", "salam"],
+    "price_list": ["price", "rate", "cost", "price list", "pricelist", "how much"],
+    "catalog": ["catalog", "catalogue", "product", "products", "brochure", "items"],
+    "invoice": ["invoice", "bill", "payment receipt", "my bill"],
+    "order_track": ["order", "track", "tracking", "where is my order", "order status", "delivery"],
+    "support": ["help", "support", "issue", "problem", "not working", "complaint"],
+    "thanks": ["thanks", "thank you", "thx", "appreciate"],
+    "human": ["human", "real person", "talk to human", "agent", "manager", "frustrated"],
+}
+
+def classify_intent(message: str) -> Tuple[str, float]:
+    """Think: What does customer want?"""
+    lower = message.lower()
+    scores = {}
+    for intent, keywords in INTENTS.items():
+        score = 0
+        for kw in keywords:
+            if kw in lower:
+                # Longer keyword = higher score
+                score += len(kw) / 5
+        scores[intent] = score
+    
+    # Get best intent
+    best = max(scores, key=scores.get)
+    confidence = scores[best]
+    
+    # If no clear intent, it's general chat
+    if confidence < 0.5:
+        return "general_business", 0.3
+    
+    return best, min(confidence, 1.0)
+
+# === 2. SENTIMENT ANALYSIS (How agent feels customer mood) ===
+def analyze_sentiment(message: str) -> str:
+    """Think: What is customer mood?"""
+    lower = message.lower()
+    negative = ["angry", "frustrated", "worst", "terrible", "bad", "useless", "stupid", "fuck", "shit", "hate", "complaint", "disappointed"]
+    positive = ["thanks", "great", "awesome", "good", "love", "perfect", "excellent", "happy"]
+    
+    neg_count = sum(1 for w in negative if w in lower)
+    pos_count = sum(1 for w in positive if w in lower)
+    
+    if neg_count > pos_count:
+        return "negative"
+    elif pos_count > neg_count:
+        return "positive"
+    else:
+        return "neutral"
+
+# === 3. ENTITY EXTRACTION (What details customer gave) ===
+def extract_entities(message: str) -> Dict:
+    """Think: What specific info did customer share?"""
+    entities = {}
+    
+    # Order ID: #12345 or order 12345
+    order_match = re.search(r'(?:order|#)\s*([A-Z0-9]{4,10})', message, re.I)
+    if order_match:
+        entities["order_id"] = order_match.group(1)
+    
+    # Phone
+    phone_match = re.search(r'(\+?\d{9,15})', message)
+    if phone_match:
+        entities["phone"] = phone_match.group(1)
+    
+    # Product names (customize for your business)
+    products = ["cement", "steel", "tile", "sanitary", "paint", "brick"]
+    found_products = [p for p in products if p in message.lower()]
+    if found_products:
+        entities["products"] = found_products
+    
+    return entities
+
+# === 4. THINKING LOOP - Main brain ===
+def think_and_plan_reply(phone: str, message: str, history: List[Dict], business_name: str) -> Dict:
+    """
+    This is HOW the agent thinks automatically:
+    1. Classify intent
+    2. Analyze sentiment
+    3. Extract entities
+    4. Check history
+    5. Decide action
+    6. Generate reply
+    """
+    print(f"\n🧠 THINKING for {phone}: '{message}'")
+    
+    # Step 1: Understand intent
+    intent, confidence = classify_intent(message)
+    print(f"   Intent: {intent} (confidence: {confidence:.2f})")
+    
+    # Step 2: Mood
+    sentiment = analyze_sentiment(message)
+    print(f"   Sentiment: {sentiment}")
+    
+    # Step 3: Entities
+    entities = extract_entities(message)
+    print(f"   Entities: {entities}")
+    
+    # Step 4: History context
+    recent = history[-3:] if len(history) > 3 else history
+    print(f"   History: {len(history)} messages, recent: {recent[-1]['text'][:50] if recent else 'none'}")
+    
+    # Step 5: Decision making (business logic)
+    should_send_doc = False
+    doc_type = None
+    needs_human = False
+    reply_strategy = "ai_generate"
+    
+    if intent == "human" or sentiment == "negative" and confidence > 0.6:
+        needs_human = True
+        reply_strategy = "handoff"
+    elif intent == "price_list":
+        should_send_doc = True
+        doc_type = "price-list.pdf"
+        reply_strategy = "ai_plus_doc"
+    elif intent == "catalog":
+        should_send_doc = True
+        doc_type = "catalog.pdf"
+        reply_strategy = "ai_plus_doc"
+    elif intent == "invoice":
+        should_send_doc = True
+        doc_type = "invoice"
+        reply_strategy = "ai_plus_doc"
+    elif intent == "order_track" and "order_id" in entities:
+        reply_strategy = "tool_order_lookup"
+    elif intent == "greeting":
+        reply_strategy = "ai_greeting"
+    elif intent == "thanks":
+        reply_strategy = "ai_thanks"
+    
+    plan = {
+        "intent": intent,
+        "confidence": confidence,
+        "sentiment": sentiment,
+        "entities": entities,
+        "should_send_doc": should_send_doc,
+        "doc_type": doc_type,
+        "needs_human": needs_human,
+        "reply_strategy": reply_strategy,
+        "thinking_time": random.uniform(0.8, 2.5),  # Human thinks 0.8-2.5s
+        "timestamp": datetime.now().isoformat()
+    }
+    
+    print(f"   Decision: {reply_strategy}, doc: {doc_type}, human: {needs_human}")
+    print(f"   Thinking time: {plan['thinking_time']:.1f}s\n")
+    
+    return plan
+
+# === 5. REPLY GENERATION BASED ON THINKING ===
+def generate_reply_from_plan(plan: Dict, phone: str, user_name: str, business_name: str) -> str:
+    """Generate reply based on thinking plan"""
+    
+    if plan["needs_human"]:
+        return "[TRIGGER_HUMAN_HANDOFF]"
+    
+    intent = plan["intent"]
+    entities = plan["entities"]
+    
+    # Business-specific templates based on thinking
+    if plan["reply_strategy"] == "ai_greeting":
+        return random.choice([
+            f"Hi {user_name or 'there'}! 👋 Welcome to {business_name}. How can I help you with our products or orders today?",
+            f"Hello! Thanks for reaching out to {business_name} 😊 What can I assist you with?",
+        ])
+    
+    elif plan["reply_strategy"] == "ai_plus_doc":
+        if intent == "price_list":
+            return f"Sure {user_name or ''}! Here's our price list from {business_name} 📄 Let me send it over"
+        elif intent == "catalog":
+            return f"Absolutely! Here's our full catalog from {business_name} with all products 😊"
+        elif intent == "invoice":
+            return f"Got it! Let me pull up your invoice and send it 📄"
+    
+    elif plan["reply_strategy"] == "tool_order_lookup":
+        order_id = entities.get("order_id", "your order")
+        return f"Let me check order {order_id} for you... 🔍 One sec!"
+    
+    elif plan["reply_strategy"] == "ai_thanks":
+        return f"You're most welcome! 🙏 Let me know if you need anything else from {business_name}"
+    
+    else:
+        return f"Thanks for your message! How can I assist you with {business_name} products, orders, or support today?"
+
+# === DEMO ===
+if __name__ == "__main__":
+    test_messages = [
+        "Hi there",
+        "Can you send me price list?",
+        "Where is my order #12345?",
+        "I want to talk to human, this is frustrating",
+        "Thanks!",
+        "Write me a poem",
+        "I need cement and steel catalog"
+    ]
+    
+    history = [{"role": "user", "text": "Hello"}, {"role": "assistant", "text": "Hi! How can I help?"}]
+    
+    for msg in test_messages:
+        plan = think_and_plan_reply("94771234567", msg, history, "ABC Materials")
+        reply = generate_reply_from_plan(plan, "94771234567", "John", "ABC Materials")
+        print(f"USER: {msg}")
+        print(f"BOT: {reply}\n")
+        print("-"*60)

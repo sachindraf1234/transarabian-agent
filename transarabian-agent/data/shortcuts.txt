@@ -1,0 +1,16 @@
+# JSON Data
+
+``` json
+{
+    "/greet": "Hi there! \ud83d\udc4b How can I help you today?",
+    "/price": "Sure! Here's our price list. Let me send it over \ud83d\udcc4",
+    "/thanks": "You're most welcome! \ud83d\ude4f Let me know if you need anything else.",
+    "/catalog": "Absolutely! Here's our full catalog with all products.",
+    "/payment": "For payment, you can use bank transfer or COD. I'll send the details.",
+    "/support": "I'm here to help! Could you please share more details about the issue?",
+    "/bye": "Thanks for chatting! Have a great day \ud83d\ude0a",
+    "/order": "Great! Could you share your order details? I'll assist you right away",
+    "/location": "We are located at Colombo, Sri Lanka. \ud83d\udccd Let me send the location",
+    "/hours": "We are open Mon-Sat 9am-6pm \ud83d\udd58"
+}
+```

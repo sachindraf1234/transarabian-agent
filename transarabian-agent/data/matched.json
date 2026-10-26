@@ -1,0 +1,32 @@
+{
+ "send": [
+  {
+   "e_number": "E24712502281412",
+   "se_number": "SE2441145",
+   "name": "CHANCHALA KAVINDI",
+   "app_date": "14.10.2026",
+   "app_time": "10:25",
+   "whatsapp": "94771234567"
+  },
+  {
+   "e_number": "E24739315562840",
+   "se_number": "SE2443824",
+   "name": "RAVIN PRAMANGA",
+   "app_date": "14.10.2026",
+   "app_time": "11:00",
+   "whatsapp": "94775551234"
+  },
+  {
+   "e_number": "E24604944240255",
+   "se_number": "SE2430419",
+   "name": "MALEESHA NETHMINI",
+   "app_date": "15.10.2026",
+   "app_time": "09:30",
+   "whatsapp": null
+  }
+ ],
+ "hold": [
+  "E24275493641672",
+  "E24605764875104"
+ ]
+}

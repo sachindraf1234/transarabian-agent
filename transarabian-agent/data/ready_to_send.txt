@@ -1,0 +1,44 @@
+TO: 94772798072  (0772798072 - owner test number)
+STATUS: queued - waiting on a valid WhatsApp token + daytime window
+
+01. Embassy Interview
+
+SE NUMBER : SE2441145
+
+Name: CHANCHALA KAVINDI
+
+Appointment Date : 14.10.2026
+
+Appointment Time: 10.25AM
+
+02. Embassy Interview
+
+SE NUMBER : SE2430501
+
+Name: SUMUDITHA SANJEEWA
+
+Appointment Date : 14.10.2026
+
+Appointment Time: 10.30AM
+
+03. Embassy Interview
+
+SE NUMBER : SE2443824
+
+Name: RAVIN PRAMANGA
+
+Appointment Date : 14.10.2026
+
+Appointment Time: 11.00AM
+
+--- next day ---
+
+01. Embassy Interview
+
+SE NUMBER : SE2430419
+
+Name: MALEESHA NETHMINI
+
+Appointment Date : 15.10.2026
+
+Appointment Time: 09.30AM
